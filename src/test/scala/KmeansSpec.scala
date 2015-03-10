@@ -44,4 +44,11 @@ class KmeansSpec extends FlatSpec with Matchers {
     val centroid: Point = Kmeans.determineNewCentroid(List(Point(1, 1), Point(2, 2), Point(1, 2), Point(2, 1)))
     centroid should be(Point(1.5, 1.5))
   }
+
+  it should "pick some random starting point" in {
+    val points: List[Point] = List(Point(0, 0), Point(1, 1), Point(1, 0), Point(0, 1), Point(4, 4))
+    val firstCentroids = Kmeans.pickStartingCentroids(points, 3)
+    val secondCentroids = Kmeans.pickStartingCentroids(points, 2)
+    firstCentroids should not be(secondCentroids)
+  }
 }
