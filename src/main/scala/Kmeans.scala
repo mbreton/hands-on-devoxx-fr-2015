@@ -60,7 +60,7 @@ object Kmeans {
   }
 
   def determineNewCentroid(points: List[Point]): Point = {
-    def summedPoint = points.fold(points.head) (_+_)
+    def summedPoint = points.reduce (_+_)
     new Point(summedPoint.x / points.size, summedPoint.y / points.size)
   }
 
