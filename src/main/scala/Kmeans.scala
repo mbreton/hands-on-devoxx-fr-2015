@@ -90,10 +90,10 @@ object Kmeans {
   }
 
   def hasConverged(previousCentroids: List[Point], centroids: List[Point]): Boolean = {
-      var sortedPrevious = previousCentroids.sortBy(norm)
-      var sortedCentroids = centroids.sortBy(norm)
+      val sortedPrevious = previousCentroids.sortBy(norm)
+      val sortedCentroids = centroids.sortBy(norm)
       (sortedPrevious zip sortedCentroids).forall({ case (previousCentriod, newCentroid) =>
-        distance(previousCentriod, newCentroid) > 0.001
+        distance(previousCentriod, newCentroid) < 0.001
       })
   }
 
