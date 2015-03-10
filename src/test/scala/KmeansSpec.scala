@@ -49,6 +49,6 @@ class KmeansSpec extends FlatSpec with Matchers {
     val points: List[Point] = List(Point(0, 0), Point(1, 1), Point(1, 0), Point(0, 1), Point(4, 4))
     val firstCentroids = Kmeans.pickStartingCentroids(points, 3)
     val secondCentroids = Kmeans.pickStartingCentroids(points, 2)
-    firstCentroids should not be(secondCentroids)
+    firstCentroids should not be secondCentroids
   }
 }
