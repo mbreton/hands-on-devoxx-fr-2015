@@ -1,6 +1,7 @@
-package tools
+package spark.naiveBayesClassification.tools
 
 /**
+ *
  * Created by Yoann on 04/03/15.
  */
 

@@ -1,11 +1,12 @@
-package modelling
+package spark.randomForestClassification.modelling
 
-import features.Engineering.featureEngineering
+import spark.randomForestClassification.features.Engineering.featureEngineering
 import org.apache.spark.{SparkContext, SparkConf}
-import tools.Utilities.{extractHeader, getMetrics}
-import modelling.RandomForestObject.{randomForestTrainClassifier, bestParamsRandomForestClassifier}
+import spark.randomForestClassification.tools.Utilities.{extractHeader, getMetrics}
+import spark.randomForestClassification.modelling.RandomForestObject.{randomForestTrainClassifier, bestParamsRandomForestClassifier}
 
 /**
+ *
  * Created by Yoann on 24/02/15.
  */
 
