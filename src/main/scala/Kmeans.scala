@@ -1,34 +1,22 @@
 import scala.util.Random
 
 object Kmeans {
-  type NoiseFunction = (Point, Point) => Point
-  def noiseIdentityFunction: NoiseFunction = (centroid, point) => point
 
   def main(args: Array[String]) {
-    def noise: NoiseFunction = { (centroid, point) =>
-      def d = distance(centroid, point)
-      if (d < 0.1) {
-        new Point(point.x + randFloat(0.1, 0.2), point.y + randFloat(0.1, 0.2))
-      } else {
-        point
-      }
-    }
-    def dataset:Plan = kmeansGenerateDataset(4, 30, noise)
-    val result:KmeansResult = kmeans(2, dataset.points)
+    def dataSet: DataSet = generateDataSet(4, 30)
+    findCentroids(2, dataSet)
   }
 
-  def kmeansGenerateDataset(numClusters: Int, sizePerCluster: Int, noise: NoiseFunction): Plan = {
-    var points: List[Point] = Nil // TODO: Bad
-    var centroids: List[Point] = Nil // TODO: Bad
-    (1 to numClusters) foreach { x =>
-      def centroid = new Point(randFloat(-1, 1), randFloat(-1, 1))
-      def rawPoint: List[Point] = generateRadialCluster(centroid, sizePerCluster, 100)
-      points = points ++ rawPoint
-        .map(rawPoint => noise(centroid, rawPoint))
-        .filter( p => -1 <= p.x && p.x <= 1 && -1 <= p.y && p.y <= 1)
-      centroids = centroids :+ centroid
+  def generateDataSet(numClusters: Int, sizePerCluster: Int): DataSet = {
+    new DataSet((1 to numClusters).map(buildCluster(sizePerCluster)).toList)
+  }
+
+  def buildCluster(nbPointInCluster: Int): (Int) => Cluster = {
+    { clusterIdx: Int =>
+      val centroid = Point(randFloat(-1, 1), randFloat(-1, 1))
+      val points = generateRadialCluster(centroid, nbPointInCluster, 100)
+      Cluster(centroid, points)
     }
-    new Plan(points, centroids)
   }
 
   def randFloat(a: Double, b: Double): Double = {
@@ -37,12 +25,22 @@ object Kmeans {
   }
 
   def generateRadialCluster(centroid: Point, clusterSize: Int, radius: Double): List[Point] = {
+    def noise(centroid: Point, point: Point): Point = {
+      def d = distance(centroid, point)
+      if (d < 0.1) {
+        new Point(point.x + randFloat(0.1, 0.2), point.y + randFloat(0.1, 0.2))
+      } else {
+        point
+      }
+    }
     def radius = 0.2
-    (1 to clusterSize).toList map { x =>
+    (1 to clusterSize).map { x =>
       def d = randFloat(0, radius)
       def alpha = randFloat(0, 2 * Math.PI)
-      new Point(centroid.x + d * Math.cos(alpha), centroid.y + d * Math.sin(alpha))
+      noise(centroid, new Point(centroid.x + d * Math.cos(alpha), centroid.y + d * Math.sin(alpha)))
     }
+      .filter(p => -1 <= p.x && p.x <= 1 && -1 <= p.y && p.y <= 1)
+      .toList
   }
 
   // solution
@@ -55,46 +53,46 @@ object Kmeans {
     centroids.minBy(distance(_, p))
   }
 
-  def partitionUsingTheDistance(centroids: List[Point], points: List[Point]): List[List[Point]] = {
-    points.groupBy(findClosestCentroid(centroids, _)).values.toList
+  def partitionUsingTheDistance(centroids: List[Point], points: List[Point]): List[Cluster] = {
+    points.groupBy(findClosestCentroid(centroids, _)).map {
+      case (centroid, pointsOfCluster) => Cluster(centroid, pointsOfCluster)
+    }.toList
   }
 
   def determineNewCentroid(points: List[Point]): Point = {
-    def summedPoint = points.reduce (_+_)
+    def summedPoint = points.reduce(_ + _)
     new Point(summedPoint.x / points.size, summedPoint.y / points.size)
   }
 
-  def updateCentroids(clusters: List[List[Point]]): List[Point] = {
-    clusters.map(determineNewCentroid)
+  def updateCentroids(clusters: List[Cluster]): List[Point] = {
+    clusters.map((cluster) => determineNewCentroid(cluster.points))
   }
 
   def pickStartingCentroids(points: List[Point], numberOfStartingPoint: Int): List[Point] = {
     Random.shuffle(points).take(numberOfStartingPoint)
   }
 
-
-  def kmeans(numberOfCluster: Int, points: List[Point]) = {
-    var centroids: List[Point] = pickStartingCentroids(points, numberOfCluster) // TODO BAD !!
-    var numOfIteration = 0 // TODO BAD !!
-    var previousCentroids: List[Point] = centroids // TODO BAD !!
-
-    while (numOfIteration < 1000 && !hasConverged(previousCentroids, centroids)) {
-      val partitioned = partitionUsingTheDistance(previousCentroids, points)
-      previousCentroids = centroids
-      centroids = updateCentroids(partitioned)
-      // TODO : Dispatch an event to inform of the current state
-      numOfIteration = numberOfCluster + 1
+  def findCentroids(numberOfCluster: Int, dataSet: DataSet) = {
+    def points: List[Point] = dataSet.clusters.map(_.points).reduce(_++_)
+    def updateCentroidWhileHasNotConverged(numOfIteration: Int, previousCentroids: List[Point]): List[Point] = {
+      val clusters = partitionUsingTheDistance(previousCentroids, points)
+      val centroids = updateCentroids(clusters)
+      if (numOfIteration < 1000 && !hasConverged(previousCentroids, centroids)) {
+        updateCentroidWhileHasNotConverged(numOfIteration + 1, centroids)
+      }
+      else {
+        centroids
+      }
     }
-
-    new KmeansResult(centroids, partitionUsingTheDistance(centroids, points))
+    updateCentroidWhileHasNotConverged(0, pickStartingCentroids(points, numberOfCluster))
   }
 
   def hasConverged(previousCentroids: List[Point], centroids: List[Point]): Boolean = {
-      val sortedPrevious = previousCentroids.sortBy(norm)
-      val sortedCentroids = centroids.sortBy(norm)
-      (sortedPrevious zip sortedCentroids).forall({ case (previousCentriod, newCentroid) =>
-        distance(previousCentriod, newCentroid) < 0.001
-      })
+    val sortedPrevious = previousCentroids.sortBy(norm)
+    val sortedCentroids = centroids.sortBy(norm)
+    (sortedPrevious zip sortedCentroids).forall({ case (previousCentriod, newCentroid) =>
+      distance(previousCentriod, newCentroid) < 0.001
+    })
   }
 
   def norm(point: Point): Double = {
@@ -102,10 +100,10 @@ object Kmeans {
   }
 }
 
-case class Plan(points: List[Point], centroids: List[Point])
+case class DataSet(clusters: List[Cluster])
+
+case class Cluster(centroid: Point, points: List[Point])
 
 case class Point(x: Double, y: Double) {
-  def + (p:Point):Point = new Point (x + p.x, y + p.y)
+  def +(p: Point): Point = new Point(x + p.x, y + p.y)
 }
-
-case class KmeansResult(centroids: List[Point], clusters: List[List[Point]])

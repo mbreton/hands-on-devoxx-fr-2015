@@ -16,14 +16,15 @@ class KmeansSpec extends FlatSpec with Matchers {
   }
 
   it should "group point by closest centroid" in {
-    val clusters: List[List[Point]] = Kmeans.partitionUsingTheDistance(
+    val clusters: List[Cluster] = Kmeans.partitionUsingTheDistance(
       List(Point(0, 0), Point(4, 4)),
       List(Point(0, 0), Point(1, 0), Point(0, 1), Point(4, 4), Point(4, 3))
     )
 
     clusters should have length (2)
-    clusters should contain(List(Point(4, 4), Point(4, 3)))
-    clusters should contain(List(Point(0, 0), Point(1, 0), Point(0, 1)))
+
+    clusters should contain(Cluster(Point(4, 4), List(Point(4, 4), Point(4, 3))))
+    clusters should contain(Cluster(Point(0, 0), List(Point(0, 0), Point(1, 0), Point(0, 1))))
   }
 
   it should "return true if the previous centroids are very closed to the new ones" in {
@@ -45,7 +46,7 @@ class KmeansSpec extends FlatSpec with Matchers {
     centroid should be(Point(1.5, 1.5))
   }
 
-  it should "pick some random starting point" in {
+  it should "pick some random starting points" in {
     val points: List[Point] = List(Point(0, 0), Point(1, 1), Point(1, 0), Point(0, 1), Point(4, 4))
     val firstCentroids = Kmeans.pickStartingCentroids(points, 3)
     val secondCentroids = Kmeans.pickStartingCentroids(points, 2)
