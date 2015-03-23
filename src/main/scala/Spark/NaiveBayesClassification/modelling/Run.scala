@@ -1,14 +1,15 @@
-package modelling
+package spark.naiveBayesClassification.modelling
 
 /**
+ *
  * Created by Yoann on 04/03/15.
  */
 
 
 import org.apache.spark.{SparkContext, SparkConf}
 import org.apache.spark.mllib.classification.NaiveBayes
-import tools.Utilities.getMetrics
-import features.Engineering.featuresEngineering
+import spark.naiveBayesClassification.tools.Utilities.getMetrics
+import spark.naiveBayesClassification.features.Engineering.featuresEngineering
 
 
 object Run {

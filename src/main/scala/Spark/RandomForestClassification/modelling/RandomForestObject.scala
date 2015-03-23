@@ -1,12 +1,13 @@
-package modelling
+package spark.randomForestClassification.modelling
 
 import org.apache.spark.mllib.regression.LabeledPoint
 import org.apache.spark.mllib.tree.RandomForest
 import org.apache.spark.mllib.tree.model.RandomForestModel
 import org.apache.spark.rdd.RDD
-import tools.Utilities._
+import spark.randomForestClassification.tools.Utilities._
 
 /**
+ *
  * Created by Yoann on 24/02/15.
  */
 
