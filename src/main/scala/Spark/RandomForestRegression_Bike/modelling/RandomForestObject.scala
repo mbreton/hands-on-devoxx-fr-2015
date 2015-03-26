@@ -22,70 +22,52 @@ object RandomForestObject {
   }
 
 
-  def gridSearchRandomForestRegressor(trainValSet: RDD[LabeledPoint],
-                                       numCross: Int = 5,
-                                       categoricalFeaturesInfo: Map[Int, Int] = Map[Int, Int](),
-                                       numTreesGrid: Array[Int] = Array(100),
-                                       featuresSubsetStrategyGrid: Array[String] = Array("auto"),
-                                       impurityGrid: Array[String] = Array("variance"),
-                                       maxDepthGrid: Array[Int] = Array(10),
-                                       maxBinsGrid: Array[Int] = Array(30)) = {
+  def gridSearchRandomForestRegressor(trainSet: RDD[LabeledPoint], valSet: RDD[LabeledPoint], categoricalFeaturesInfo: Map[Int, Int] = Map[Int, Int](),
+                                       numTreesGrid: Array[Int] = Array(100), featureSubsetStrategyGrid: Array[String] = Array("auto"),
+                                       impurity: String = "variance", maxDepthGrid: Array[Int] = Array(10), maxBinsGrid: Array[Int] = Array(30)) = {
 
-    val foldsCrossValidation = trainValSet.randomSplit(Array.fill[Double](numCross)(1.toFloat/numCross))
-
-    val gridSearch =
+    val gridSearh =
       for (numTrees <- numTreesGrid;
-           featuresSubsetStrategy <- featuresSubsetStrategyGrid;
-           impurity <- impurityGrid;
+           featureSubsetStrategy <- featureSubsetStrategyGrid;
            maxDepth <- maxDepthGrid;
            maxBins <- maxBinsGrid)
-      yield {
+        yield {
 
+          val model = RandomForest.trainRegressor(trainSet, categoricalFeaturesInfo,
+            numTrees, featureSubsetStrategy, impurity, maxDepth, maxBins)
 
+          val accuracyTrain = getMetrics(model, trainSet)
+          val accuracyVal = getMetrics(model, valSet)
 
-        val mseValCross =
-          for (cross <- 0 to numCross-1)
-          yield {
+          ((numTrees, featureSubsetStrategy, maxDepth, maxBins), accuracyTrain, accuracyVal)
+        }
 
-            val valSet = foldsCrossValidation(cross)
-            val trainSet = buildTrainSetCrossValidation(foldsCrossValidation, numCross, cross)
-            val model = RandomForest.trainRegressor(trainSet, categoricalFeaturesInfo, numTrees, featuresSubsetStrategy, impurity, maxDepth, maxBins)
-
-            getMetrics(model, valSet)
-          }
-
-        val mseValMean = mseValCross.reduce(_+_).toFloat / numCross
-
-        ((numTrees, featuresSubsetStrategy, impurity, maxDepth, maxBins), mseValMean)
-      }
-
-    val params = gridSearch.sortBy(_._2).take(1)(0)._1
+    val params = gridSearh.sortBy(_._2).take(1)(0)._1
     val numTrees = params._1
-    val featuresSubsetStrategy = params._2
-    val impurity = params._3
-    val maxDepth = params._4
-    val maxBins = params._5
+    val featureSubsetStrategy = params._2
+    val maxDepth = params._3
+    val maxBins = params._4
 
-    (categoricalFeaturesInfo, numTrees, featuresSubsetStrategy, impurity, maxDepth, maxBins)
+    (categoricalFeaturesInfo, numTrees, featureSubsetStrategy, impurity, maxDepth, maxBins)
+
   }
 
 
-  def bestParamsRandomForestRegressor(trainValSet: RDD[LabeledPoint],
-                                       numCross: Int = 5,
+  def bestParamsRandomForestRegressor(trainSet: RDD[LabeledPoint], valSet: RDD[LabeledPoint],
                                        computeGridSearch: Boolean = true,
                                        categoricalFeaturesInfo: Map[Int, Int] = Map[Int, Int](),
                                        numTreesGrid: Array[Int] = Array(100),
                                        featuresSubsetStrategyGrid: Array[String] = Array("auto"),
-                                       impurityGrid: Array[String] = Array("variance"),
+                                       impurity: String = "variance",
                                        maxDepthGrid: Array[Int] = Array(10),
                                        maxBinsGrid: Array[Int] = Array(30),
-                                       overide: Boolean = false) = {
+                                       overide: Boolean = false): (Map[Int,Int], Int, String, String, Int, Int) = {
     if (computeGridSearch) {
-      gridSearchRandomForestRegressor(trainValSet, numCross, categoricalFeaturesInfo, numTreesGrid, featuresSubsetStrategyGrid, impurityGrid, maxDepthGrid, maxBinsGrid)
+      gridSearchRandomForestRegressor(trainSet, valSet, categoricalFeaturesInfo, numTreesGrid, featuresSubsetStrategyGrid, impurity, maxDepthGrid, maxBinsGrid)
     }
     else {
       if (overide) {
-        (categoricalFeaturesInfo, numTreesGrid(0), featuresSubsetStrategyGrid(0), impurityGrid(0), maxDepthGrid(0), maxBinsGrid(0))
+        (categoricalFeaturesInfo, numTreesGrid(0), featuresSubsetStrategyGrid(0), impurity, maxDepthGrid(0), maxBinsGrid(0))
       }
       else {
         val numTrees = 100
