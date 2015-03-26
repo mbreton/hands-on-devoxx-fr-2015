@@ -17,6 +17,8 @@ object Engineering {
     val dataParsed = rdd.map {
       line =>
 
+
+
         val values = line.split(',').map(_.toDouble)
 
         // Convert all wilderness categories into one categorical feature

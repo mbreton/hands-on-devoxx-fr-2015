@@ -18,7 +18,7 @@ object Utilities {
     val schema = rdd.first()
 
     // Construct dataset without the first line
-    return (schema, rdd.mapPartitionsWithIndex(
+    (schema, rdd.mapPartitionsWithIndex(
       (partitionIdx: Int, lines: Iterator[String]) => {
         if (partitionIdx == 0) {
           lines.drop(1)
@@ -32,7 +32,7 @@ object Utilities {
 
   def getMetrics(model: RandomForestModel, data: RDD[LabeledPoint]): MulticlassMetrics = {
     val predictionsAndLabels = data.map(example => (model.predict(example.features), example.label))
-    return new MulticlassMetrics(predictionsAndLabels)
+    new MulticlassMetrics(predictionsAndLabels)
   }
 
 
