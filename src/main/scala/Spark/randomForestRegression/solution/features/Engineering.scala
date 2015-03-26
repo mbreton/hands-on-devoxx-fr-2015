@@ -1,4 +1,4 @@
-package features
+package spark.randomForestRegression.solution.features
 
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.mllib.regression.LabeledPoint
@@ -8,6 +8,7 @@ import org.joda.time.DateTime
 
 
 /**
+ *
  * Created by Yoann on 24/02/15.
  */
 

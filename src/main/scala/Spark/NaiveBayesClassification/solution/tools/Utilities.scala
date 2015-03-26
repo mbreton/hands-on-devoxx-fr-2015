@@ -1,4 +1,4 @@
-package spark.naiveBayesClassification.tools
+package spark.naiveBayesClassification.solution.tools
 
 /**
  *

@@ -1,4 +1,4 @@
-package spark.RandomForestRegression_Bike.features
+package spark.randomForestRegression.solution.features
 
 
 import org.joda.time.DateTime

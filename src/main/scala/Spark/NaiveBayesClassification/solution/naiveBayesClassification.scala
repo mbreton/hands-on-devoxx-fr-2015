@@ -1,18 +1,14 @@
-package spark.naiveBayesClassification.modelling
+package spark.naiveBayesClassification.solution
 
-/**
- *
- * Created by Yoann on 04/03/15.
- */
 
 
 import org.apache.spark.{SparkContext, SparkConf}
 import org.apache.spark.mllib.classification.NaiveBayes
-import spark.naiveBayesClassification.tools.Utilities.getMetrics
-import spark.naiveBayesClassification.features.Engineering.featuresEngineering
+import spark.naiveBayesClassification.solution.tools.Utilities.getMetrics
+import spark.naiveBayesClassification.solution.features.Engineering.featuresEngineering
 
 
-object Run {
+object naiveBayesClassification {
 
 
   def main(args: Array[String]) : Unit = {
@@ -50,5 +46,6 @@ object Run {
     println(s"Confusion Matrix on test set: \n ${confusionTest}")
 
   }
+
 
 }

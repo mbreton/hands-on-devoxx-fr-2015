@@ -1,4 +1,4 @@
-package tools
+package spark.randomForestRegression.solution.tools
 
 import org.apache.spark.SparkContext._
 import org.apache.spark.mllib.regression.LabeledPoint
@@ -6,6 +6,7 @@ import org.apache.spark.mllib.tree.model.RandomForestModel
 import org.apache.spark.rdd.RDD
 
 /**
+ *
  * Created by Yoann on 24/02/15.
  */
 

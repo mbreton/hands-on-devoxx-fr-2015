@@ -1,6 +1,6 @@
-package spark.randomForestClassification.tools
+package spark.randomForestRegression.stubs.tools
 
-import org.apache.spark.mllib.evaluation.MulticlassMetrics
+import org.apache.spark.SparkContext._
 import org.apache.spark.mllib.regression.LabeledPoint
 import org.apache.spark.mllib.tree.model.RandomForestModel
 import org.apache.spark.rdd.RDD
@@ -18,7 +18,7 @@ object Utilities {
     val schema = rdd.first()
 
     // Construct dataset without the first line
-    (schema, rdd.mapPartitionsWithIndex(
+    return (schema, rdd.mapPartitionsWithIndex(
       (partitionIdx: Int, lines: Iterator[String]) => {
         if (partitionIdx == 0) {
           lines.drop(1)
@@ -30,10 +30,12 @@ object Utilities {
   }
 
 
-  def getMetrics(model: RandomForestModel, data: RDD[LabeledPoint]): MulticlassMetrics = {
+  def getMetrics(model: RandomForestModel, data: RDD[LabeledPoint]): Double = {
     val predictionsAndLabels = data.map(example => (model.predict(example.features), example.label))
-    new MulticlassMetrics(predictionsAndLabels)
+    val RMSE = math.sqrt(predictionsAndLabels.map{case(v,p) => math.pow((v - p), 2)}.mean())
+    RMSE
   }
+
 
 
   def buildTrainSetCrossValidation(foldsCrossValidation: Array[RDD[LabeledPoint]], numCross: Int, labelValidationFold: Int) = {

@@ -1,4 +1,4 @@
-package spark.naiveBayesClassification.features
+package spark.naiveBayesClassification.stubs.features
 
 import org.apache.spark.mllib.regression.LabeledPoint
 import org.apache.spark.rdd.RDD

@@ -1,15 +1,11 @@
-package modelling
+package spark.randomForestRegression.solution
 
-import features.Engineering.featureEngineering
+import spark.randomForestRegression.solution.features.Engineering.featureEngineering
 import org.apache.spark.{SparkContext, SparkConf}
-import tools.Utilities.{extractHeader, getMetrics}
-import modelling.RandomForestObject.{randomForestTrainRegressor, bestParamsRandomForestRegressor}
+import spark.randomForestRegression.solution.tools.Utilities.{extractHeader, getMetrics}
+import spark.randomForestRegression.solution.modelling.RandomForestObject.{randomForestTrainRegressor, bestParamsRandomForestRegressor}
 
-/**
- * Created by Yoann on 24/02/15.
- */
-
-object Run {
+object randomForestRegression {
 
   def main(args: Array[String]): Unit = {
 
@@ -20,7 +16,9 @@ object Run {
     // Generating Data Paths
     val sep = System.getProperty("file.separator")
     val dataPathDir = s"${System.getenv("CHALLENGES_DATA")}${sep}"
-    val dataPath = dataPathDir + "bike_train.csv"
+    //val dataPath = dataPathDir + "bike_train.csv"
+    val dataPath = "./source/bike_train.csv"
+
 
     // Loading Data
     val data = sc.textFile(dataPath)
@@ -38,7 +36,7 @@ object Run {
     valSet.cache()
 
     // Modelling
-    val categoricalFeaturesInfo = Map(0 -> 4, 3 -> 4)
+    val categoricalFeaturesInfo = Map(0 -> 7, 1 -> 12, 3 -> 4, 6 -> 4)
     val bestParams = bestParamsRandomForestRegressor(trainSet, valSet, computeGridSearch = true,
       categoricalFeaturesInfo = categoricalFeaturesInfo, maxDepthGrid = Array(20, 30),
       maxBinsGrid = Array(50, 100, 200), numTreesGrid = Array(100), overide = true)
@@ -58,5 +56,6 @@ object Run {
     println(s"Test Error: ${accuracyTest}")
 
   }
+
 
 }
