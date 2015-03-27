@@ -1,6 +1,7 @@
 *.class
 *.log
 *.DS_Store
+**/.DS_Store
 
 # sbt specific
 .cache/
@@ -19,3 +20,4 @@ project/plugins/project/
 
 #idea
 .idea
+*.iml
