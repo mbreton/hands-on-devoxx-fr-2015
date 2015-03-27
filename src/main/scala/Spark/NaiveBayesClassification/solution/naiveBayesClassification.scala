@@ -1,17 +1,16 @@
 package spark.naiveBayesClassification.solution
 
 
-
-import org.apache.spark.{SparkContext, SparkConf}
 import org.apache.spark.mllib.classification.NaiveBayes
-import spark.naiveBayesClassification.solution.tools.Utilities.getMetrics
+import org.apache.spark.{SparkConf, SparkContext}
 import spark.naiveBayesClassification.solution.features.Engineering.featuresEngineering
+import spark.naiveBayesClassification.solution.tools.Utilities.getMetrics
 
 
-object naiveBayesClassification {
+object NaiveBayesClassification {
 
 
-  def main(args: Array[String]) : Unit = {
+  def main(args: Array[String]): Unit = {
 
     val conf = new SparkConf().setAppName("Forest Cover Type Prediction").setMaster("local[4]").set("spark.executor.memory", "6g")
     val sc = new SparkContext(conf)
@@ -24,7 +23,7 @@ object naiveBayesClassification {
     val data = sc.textFile(dataPath)
 
     // Parsing & Feature Engineering
-    val dataParsed =  featuresEngineering(data)
+    val dataParsed = featuresEngineering(data)
 
     //Spliting
     val Array(trainSet, testSet) = dataParsed.randomSplit(Array(0.75, 0.25))
