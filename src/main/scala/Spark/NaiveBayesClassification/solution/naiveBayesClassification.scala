@@ -10,19 +10,17 @@ object NaiveBayesClassification {
 
   def main(args: Array[String]): Unit = {
 
-    val conf = new SparkConf().setAppName("Forest Cover Type Prediction").setMaster("local[4]").set("spark.executor.memory", "6g")
+    // Setup Spark configurations
+    val conf = new SparkConf().setAppName("SMS_Spam_Classification").setMaster("local[4]").set("spark.executor.memory", "6g")
     val sc = new SparkContext(conf)
 
-    // Loading
-    val sep = System.getProperty("file.separator")
-    val dataPath = s"${System.getenv("DATASETS")}${sep}smsspamcollection${sep}SMSSpamCollection"
-
-    val data = sc.textFile(dataPath)
+    // Loading Data
+    val data = sc.textFile("./source/sms_train.csv")
 
     // Parsing & Feature Engineering
     val dataParsed = featuresEngineering(data)
 
-    //Splitting
+    // Splitting
     val Array(trainSet, testSet) = dataParsed.randomSplit(Array(0.75, 0.25))
     trainSet.cache()
 

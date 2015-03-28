@@ -37,8 +37,8 @@ object RandomForestObject {
           val model = RandomForest.trainRegressor(trainSet, categoricalFeaturesInfo,
             numTrees, featureSubsetStrategy, impurity, maxDepth, maxBins)
 
-          val accuracyTrain = getMetrics(model, trainSet)
-          val accuracyVal = getMetrics(model, valSet)
+          val accuracyTrain = calculateRMSE(model, trainSet)
+          val accuracyVal = calculateRMSE(model, valSet)
 
           ((numTrees, featureSubsetStrategy, maxDepth, maxBins), accuracyTrain, accuracyVal)
         }
@@ -52,36 +52,5 @@ object RandomForestObject {
     (categoricalFeaturesInfo, numTrees, featureSubsetStrategy, impurity, maxDepth, maxBins)
 
   }
-
-
-  def bestParamsRandomForestRegressor(trainSet: RDD[LabeledPoint], valSet: RDD[LabeledPoint],
-                                       computeGridSearch: Boolean = true,
-                                       categoricalFeaturesInfo: Map[Int, Int] = Map[Int, Int](),
-                                       numTreesGrid: Array[Int] = Array(100),
-                                       featuresSubsetStrategyGrid: Array[String] = Array("auto"),
-                                       impurity: String = "variance",
-                                       maxDepthGrid: Array[Int] = Array(10),
-                                       maxBinsGrid: Array[Int] = Array(30),
-                                       overide: Boolean = false): (Map[Int,Int], Int, String, String, Int, Int) = {
-    if (computeGridSearch) {
-      gridSearchRandomForestRegressor(trainSet, valSet, categoricalFeaturesInfo, numTreesGrid, featuresSubsetStrategyGrid, impurity, maxDepthGrid, maxBinsGrid)
-    }
-    else {
-      if (overide) {
-        (categoricalFeaturesInfo, numTreesGrid(0), featuresSubsetStrategyGrid(0), impurity, maxDepthGrid(0), maxBinsGrid(0))
-      }
-      else {
-        val numTrees = 100
-        val featuresSubsetStrategy = "auto"
-        val impurity = "variance"
-        val maxDepth = 10
-        val maxBins = 200
-
-        (categoricalFeaturesInfo, numTrees, featuresSubsetStrategy, impurity, maxDepth, maxBins)
-      }
-    }
-  }
-
-
 
 }
