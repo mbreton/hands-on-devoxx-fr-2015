@@ -17,11 +17,12 @@ object NaiveBayesClassification {
     val sc = new SparkContext(conf)
 
     // Loading Data
-    val data = sc.textFile("./source/sms_train.csv")
+    // TODO : Read File ./source/sms_train.csv
+    // val data = sc.textFile("./source/sms_train.csv")
 
     // Parsing & Feature Engineering
-    // TODO : Modify the featureEngineering method in features/Engineering
-    val dataParsed: RDD[LabeledPoint] = featureEngineering(data)
+    // TODO : Modify the featureEngineering method in features/Engineering and parse the data
+    //val dataParsed: RDD[LabeledPoint] = featureEngineering(data)
 
     // Splitting
     // TODO : Split the dataset in a train and a test set (proportions 0.75, 0.25)
@@ -44,10 +45,10 @@ object NaiveBayesClassification {
     // val confusionTest = testMetrics.confusionMatrix
 
     // Print results
-    println(s"Train Error: $accuracyTrain")
-    println(s"Confusion Matrix on training set: \n $confusionTrain")
-    println(s"Test Error: $accuracyTest")
-    println(s"Confusion Matrix on test set: \n $confusionTest")
+    // println(s"Train Error: $accuracyTrain")
+    // println(s"Confusion Matrix on training set: \n $confusionTrain")
+    // println(s"Test Error: $accuracyTest")
+    // println(s"Confusion Matrix on test set: \n $confusionTest")
   }
 
 }

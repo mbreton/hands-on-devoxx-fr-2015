@@ -9,7 +9,7 @@ import org.joda.time.DateTime
 
 object Engineering {
 
-  def featureEngineering(rdd: RDD[String]): RDD[LabeledPoint] = {
+  def featureEngineering(rdd: RDD[String]) : RDD[LabeledPoint] = {
 
     val dataParsed = rdd.map {
       line =>
@@ -35,11 +35,12 @@ object Engineering {
 
         // Put all final features into a dense Vector
         // TODO 3 : Add date features to the array of features
-        val array = Array(season) ++ valuesNoDate.slice(4,6) ++ Array(weather) ++ valuesNoDate.slice(10, valuesNoDate.size-1)
-        val featureVector = Vectors.dense(array)
-        val label = valuesNoDate.last
+        //val array = Array(season) ++ valuesNoDate.slice(4,6) ++ Array(weather) ++ valuesNoDate.slice(10, valuesNoDate.size-1)
+        //val featureVector = Vectors.dense(array)
+        //val label = valuesNoDate.last
 
-        LabeledPoint(label, featureVector)
+        // TODO : Change LabeledPoint
+        LabeledPoint(0, Vectors.dense(Array(0d)))
     }
 
     dataParsed

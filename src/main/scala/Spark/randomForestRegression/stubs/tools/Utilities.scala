@@ -7,6 +7,11 @@ import org.apache.spark.rdd.RDD
 
 object Utilities {
 
+  /**
+   * Exctract heaxer od a dataset
+   * @param rdd A RDD with a header inside
+   * @return A tuple2. First element of the tuple is the header. Second element is the data.
+   */
   def extractHeader(rdd: RDD[String]): (String, RDD[String]) = {
 
     // Take the first line (csv schema)
@@ -28,8 +33,9 @@ object Utilities {
 
     val predictionsAndLabels = data.map(example => (model.predict(example.features), example.label))
 
-    // TODO 1 : Calculate the RMSE
+    // TODO 1 : Calculate the RMSE and change return
     // math.sqrt(predictionsAndLabels.map{case(v,p) => math.pow((v - p), 2)}.mean())
+    0d
   }
 
 }

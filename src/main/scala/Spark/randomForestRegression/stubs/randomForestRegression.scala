@@ -5,7 +5,7 @@ import org.apache.spark.{SparkContext, SparkConf}
 import spark.randomForestRegression.stubs.tools.Utilities.{extractHeader, calculateRMSE}
 import spark.randomForestRegression.stubs.modelling.RandomForestObject.{randomForestTrainRegressor, gridSearchRandomForestRegressor}
 
-object randomForestRegression {
+object RandomForestRegression {
 
   def main(args: Array[String]): Unit = {
 
@@ -14,13 +14,17 @@ object randomForestRegression {
     val sc = new SparkContext(conf)
 
     // Loading Data
-    val data = sc.textFile("./source/bike_train.csv")
+    // TODO : Read File ./source/bike_train.csv
+    //val data = sc.textFile("./source/bike_train.csv")
 
     // Parsing Data & Feature Engineering
-    val schemaData = extractHeader(data)
+    // TODO : use function of package tools to extract header
+    //val schemaData = extractHeader(data)
     // TODO 1 : Modify the featureEngineering method in features/Engineering
     // TODO 3 : Modify the featureEngineering method in features/Engineering to add new features
-    val dataParsed = featureEngineering(schemaData._2)
+
+    // TODO : get the clean data
+    //val dataParsed = featureEngineering(schemaData._2)
 
     // Splitting
     // TODO 1 : Split the dataset in a train, a validation and a test set (proportions 0.8, 0.1, 0.1)
@@ -31,17 +35,17 @@ object randomForestRegression {
     // Model tuning
     // TODO 2 : Set better parameters of your choice
     // TODO 4 : Modify gridSearchRandomForestRegressor in modelling/RandomForestObject to perform grid search
-    val categoricalFeaturesInfo = Map(0 -> 4, 3 -> 4)
-    val numTreesGrid = Array(10)
-    val maxDepthGrid = Array(2)
-    val maxBinsGrid = Array(12)
-    val bestParams = gridSearchRandomForestRegressor(trainSet, valSet,
-      categoricalFeaturesInfo = categoricalFeaturesInfo, maxDepthGrid = maxDepthGrid,
-      maxBinsGrid = maxBinsGrid, numTreesGrid = numTreesGrid)
+    //val categoricalFeaturesInfo = Map(0 -> 4, 3 -> 4)
+    //val numTreesGrid = Array(10)
+    //val maxDepthGrid = Array(2)
+    //val maxBinsGrid = Array(12)
+    //val bestParams = gridSearchRandomForestRegressor(trainSet, valSet,
+    //  categoricalFeaturesInfo = categoricalFeaturesInfo, maxDepthGrid = maxDepthGrid,
+    //  maxBinsGrid = maxBinsGrid, numTreesGrid = numTreesGrid)
 
     // Modelling
-    val dataTrain = sc.union(trainSet, valSet)
-    val model = (randomForestTrainRegressor _).tupled(bestParams)(dataTrain)
+    //val dataTrain = sc.union(trainSet, valSet)
+    //val model = (randomForestTrainRegressor _).tupled(bestParams)(dataTrain)
 
     // Evaluation
     // TODO 1 : Implement the calculateRMSE method in tools/Utilities
@@ -52,9 +56,10 @@ object randomForestRegression {
 
 
     // Show Evaluation results
-    println(s"Best Parameters: ${bestParams}")
-    println(s"Train Error: $rmseTrain")
-    println(s"Test Error: $rmseTest")
+    // TODO : print the results
+    //println(s"Best Parameters: ${bestParams}")
+    //println(s"Train Error: $rmseTrain")
+    //println(s"Test Error: $rmseTest")
 
   }
 
