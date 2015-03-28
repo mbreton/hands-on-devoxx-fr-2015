@@ -2,6 +2,8 @@ package spark.naiveBayesClassification.stubs
 
 import org.apache.spark.mllib.classification.NaiveBayes
 import org.apache.spark.mllib.evaluation.MulticlassMetrics
+import org.apache.spark.mllib.regression.LabeledPoint
+import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 import spark.naiveBayesClassification.stubs.features.Engineering.featureEngineering
 import spark.naiveBayesClassification.stubs.tools.Utilities.getMetrics
@@ -18,23 +20,28 @@ object NaiveBayesClassification {
     val data = sc.textFile("./source/sms_train.csv")
 
     // Parsing & Feature Engineering
-    val dataParsed = featureEngineering(data)
+    // TODO : Modify the featureEngineering method in features/Engineering
+    val dataParsed: RDD[LabeledPoint] = featureEngineering(data)
 
     // Splitting
-    val Array(trainSet, testSet) = dataParsed.randomSplit(Array(0.75, 0.25))
-    trainSet.cache()
+    // TODO : Split the dataset in a train and a test set (proportions 0.75, 0.25)
+    // val Array(trainSet, testSet) = dataParsed.randomSplit(Array(0.75, 0.25))
+    // trainSet.cache()
 
     // Modelling
-    val model = NaiveBayes.train(trainSet, lambda = 1.0)
+    // TODO : Train a Naive Bayes model on the train set
+    // val model = NaiveBayes.train(trainSet, lambda = 1.0)
 
     // Evaluation
-    val trainMetrics: MulticlassMetrics = getMetrics(model, trainSet)
-    val testMetrics: MulticlassMetrics = getMetrics(model, testSet)
+    // TODO : Calculate the precision and the confusion matrix after prediction on the test set.
+    // TODO : Do the same for the train set for comparison
+    // val trainMetrics: MulticlassMetrics = getMetrics(model, trainSet)
+    // val testMetrics: MulticlassMetrics = getMetrics(model, testSet)
 
-    val accuracyTrain = trainMetrics.precision
-    val confusionTrain = trainMetrics.confusionMatrix
-    val accuracyTest = testMetrics.precision
-    val confusionTest = testMetrics.confusionMatrix
+    // val accuracyTrain = trainMetrics.precision
+    // val confusionTrain = trainMetrics.confusionMatrix
+    // val accuracyTest = testMetrics.precision
+    // val confusionTest = testMetrics.confusionMatrix
 
     // Print results
     println(s"Train Error: $accuracyTrain")

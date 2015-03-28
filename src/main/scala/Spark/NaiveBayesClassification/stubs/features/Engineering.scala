@@ -4,7 +4,7 @@ import org.apache.spark.mllib.regression.LabeledPoint
 import org.apache.spark.rdd.RDD
 import org.apache.spark.mllib.feature.HashingTF
 import org.apache.spark.mllib.feature.IDF
-import org.apache.spark.mllib.linalg.{Vectors, Vector}
+import org.apache.spark.mllib.linalg.Vector
 
 object Engineering {
 
@@ -26,8 +26,8 @@ object Engineering {
     val idf = new IDF().fit(tf)
     val tfidf: RDD[Vector] = idf.transform(tf)
 
-    // Zip targets and features and convert to LabeledPoint
-    targets.zip(tfidf).map(x => LabeledPoint(x._1, x._2))
+    // TODO : Zip targets and features and convert to LabeledPoint in a map
+    // targets.zip(tfidf).map(x => LabeledPoint(x._1, x._2))
 
   }
 

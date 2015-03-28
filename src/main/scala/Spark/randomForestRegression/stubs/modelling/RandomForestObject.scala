@@ -28,30 +28,31 @@ object RandomForestObject {
                                       maxDepthGrid: Array[Int] = Array(2),
                                       maxBinsGrid: Array[Int] = Array(4)) = {
 
-    val gridSearch =
+    // TODO 4 : Implement a grid search to find the best parameters and modify the result of the function
+//    val gridSearch =
+//
+//      for (numTrees <- numTreesGrid;
+//           featureSubsetStrategy <- featureSubsetStrategyGrid;
+//           maxDepth <- maxDepthGrid;
+//           maxBins <- maxBinsGrid)
+//        yield {
+//
+//          val model = RandomForest.trainRegressor(trainSet, categoricalFeaturesInfo, numTrees, featureSubsetStrategy,
+//            impurity, maxDepth, maxBins)
+//
+//          val accuracyTrain = calculateRMSE(model, trainSet)
+//          val accuracyVal = calculateRMSE(model, valSet)
+//
+//          ((numTrees, featureSubsetStrategy, maxDepth, maxBins), accuracyTrain, accuracyVal)
+//        }
+//
+//    val params = gridSearch.sortBy(_._2).take(1)(0)._1
+//    val numTrees = params._1
+//    val featureSubsetStrategy = params._2
+//    val maxDepth = params._3
+//    val maxBins = params._4
 
-      for (numTrees <- numTreesGrid;
-           featureSubsetStrategy <- featureSubsetStrategyGrid;
-           maxDepth <- maxDepthGrid;
-           maxBins <- maxBinsGrid)
-        yield {
-
-          val model = RandomForest.trainRegressor(trainSet, categoricalFeaturesInfo, numTrees, featureSubsetStrategy,
-            impurity, maxDepth, maxBins)
-
-          val accuracyTrain = calculateRMSE(model, trainSet)
-          val accuracyVal = calculateRMSE(model, valSet)
-
-          ((numTrees, featureSubsetStrategy, maxDepth, maxBins), accuracyTrain, accuracyVal)
-        }
-
-    val params = gridSearch.sortBy(_._2).take(1)(0)._1
-    val numTrees = params._1
-    val featureSubsetStrategy = params._2
-    val maxDepth = params._3
-    val maxBins = params._4
-
-    (categoricalFeaturesInfo, numTrees, featureSubsetStrategy, impurity, maxDepth, maxBins)
+    (categoricalFeaturesInfo, numTreesGrid(0), featureSubsetStrategyGrid(0), impurity, maxDepthGrid(0), maxBinsGrid(0))
 
   }
 

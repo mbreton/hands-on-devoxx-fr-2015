@@ -16,13 +16,13 @@ object Engineering {
 
         val values = line.split(',')
 
-        // Create features from dates
-        val dateString = values(0).split(" ")(0)
-        val date = new DateTime(dateString)
+        // TODO 3 : Create features from dates
+        // val dateString = values(0).split(" ")(0)
+        // val date = new DateTime(dateString)
 
-        val dayOfWeek = date.dayOfWeek().get() - 1
-        val month = date.monthOfYear().get() - 1
-        val year = date.year().get()
+        // val dayOfWeek = date.dayOfWeek().get() - 1
+        // val month = date.monthOfYear().get() - 1
+        // val year = date.year().get()
 
         // Convert all features but date to double
         val valuesNoDate = values.slice(1,values.size).map(_.toDouble)
@@ -30,11 +30,12 @@ object Engineering {
         // Convert all season categories into one categorical feature
         val season = valuesNoDate.slice(0, 4).indexOf(1.0).toDouble
 
-        // Convert all weather categories into one categorical feature
-        val weather = valuesNoDate.slice(6, 10).indexOf(1.0).toDouble
+        // TODO 1 : Convert all weather categories into one categorical feature
+        //val weather = valuesNoDate.slice(6, 10).indexOf(1.0).toDouble
 
         // Put all final features into a dense Vector
-        val array = Array(dayOfWeek, month, year, season) ++ valuesNoDate.slice(4,6) ++ Array(weather) ++ valuesNoDate.slice(10, valuesNoDate.size-1)
+        // TODO 3 : Add date features to the array of features
+        val array = Array(season) ++ valuesNoDate.slice(4,6) ++ Array(weather) ++ valuesNoDate.slice(10, valuesNoDate.size-1)
         val featureVector = Vectors.dense(array)
         val label = valuesNoDate.last
 
