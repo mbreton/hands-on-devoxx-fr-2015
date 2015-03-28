@@ -9,7 +9,9 @@ import org.apache.spark.rdd.RDD
 object Utilities {
 
   def getMetrics(model: NaiveBayesModel, data: RDD[LabeledPoint]): MulticlassMetrics = {
+
     val predictionsAndLabels = data.map(example => (model.predict(example.features), example.label))
+
     new MulticlassMetrics(predictionsAndLabels)
   }
 

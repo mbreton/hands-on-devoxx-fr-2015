@@ -1,49 +1,46 @@
 package spark.naiveBayesClassification.stubs
 
 import org.apache.spark.mllib.classification.NaiveBayes
+import org.apache.spark.mllib.evaluation.MulticlassMetrics
 import org.apache.spark.{SparkConf, SparkContext}
-import spark.naiveBayesClassification.stubs.features.Engineering.featuresEngineering
+import spark.naiveBayesClassification.stubs.features.Engineering.featureEngineering
 import spark.naiveBayesClassification.stubs.tools.Utilities.getMetrics
 
+object NaiveBayesClassification {
 
-object naiveBayesClassification {
+  def main(args: Array[String]): Unit = {
 
+    // Setup Spark configurations
+    val conf = new SparkConf().setAppName("SMS_Spam_Classification").setMaster("local[4]").set("spark.executor.memory", "6g")
+    val sc = new SparkContext(conf)
 
-   def main(args: Array[String]) : Unit = {
+    // Loading Data
+    val data = sc.textFile("./source/sms_train.csv")
 
-     val conf = new SparkConf().setAppName("Forest Cover Type Prediction").setMaster("local[4]").set("spark.executor.memory", "6g")
-     val sc = new SparkContext(conf)
+    // Parsing & Feature Engineering
+    val dataParsed = featureEngineering(data)
 
-     // Loading
-     val sep = System.getProperty("file.separator")
-     val dataPathDir = s"${System.getenv("DATASETS")}${sep}smsspamcollection${sep}"
-     val dataPath = dataPathDir + "SMSSpamCollection"
+    // Splitting
+    val Array(trainSet, testSet) = dataParsed.randomSplit(Array(0.75, 0.25))
+    trainSet.cache()
 
-     val data = sc.textFile(dataPath)
+    // Modelling
+    val model = NaiveBayes.train(trainSet, lambda = 1.0)
 
-     // Parsing & Feature Engineering
-     val dataParsed =  featuresEngineering(data)
+    // Evaluation
+    val trainMetrics: MulticlassMetrics = getMetrics(model, trainSet)
+    val testMetrics: MulticlassMetrics = getMetrics(model, testSet)
 
-     //Spliting
-     val Array(trainSet, testSet) = dataParsed.randomSplit(Array(0.75, 0.25))
-     trainSet.cache()
+    val accuracyTrain = trainMetrics.precision
+    val confusionTrain = trainMetrics.confusionMatrix
+    val accuracyTest = testMetrics.precision
+    val confusionTest = testMetrics.confusionMatrix
 
-     //Modelling
-     val model = NaiveBayes.train(trainSet, lambda = 1.0)
+    // Print results
+    println(s"Train Error: $accuracyTrain")
+    println(s"Confusion Matrix on training set: \n $confusionTrain")
+    println(s"Test Error: $accuracyTest")
+    println(s"Confusion Matrix on test set: \n $confusionTest")
+  }
 
-     //Evaluation
-     val accuracyTrain = getMetrics(model, trainSet).precision
-     val confusionTrain = getMetrics(model, trainSet).confusionMatrix
-     val accuracyTest = getMetrics(model, testSet).precision
-     val confusionTest = getMetrics(model, testSet).confusionMatrix
-
-     // Print results
-     println(s"Train Error: ${accuracyTrain}")
-     println(s"Confusion Matrix on training set: \n ${confusionTrain}")
-     println(s"Test Error: ${accuracyTest}")
-     println(s"Confusion Matrix on test set: \n ${confusionTest}")
-
-   }
-
-
- }
+}

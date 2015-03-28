@@ -3,7 +3,7 @@ package spark.naiveBayesClassification.solution
 import org.apache.spark.mllib.classification.NaiveBayes
 import org.apache.spark.mllib.evaluation.MulticlassMetrics
 import org.apache.spark.{SparkConf, SparkContext}
-import spark.naiveBayesClassification.solution.features.Engineering.featuresEngineering
+import spark.naiveBayesClassification.solution.features.Engineering.featureEngineering
 import spark.naiveBayesClassification.solution.tools.Utilities.getMetrics
 
 object NaiveBayesClassification {
@@ -18,13 +18,13 @@ object NaiveBayesClassification {
     val data = sc.textFile("./source/sms_train.csv")
 
     // Parsing & Feature Engineering
-    val dataParsed = featuresEngineering(data)
+    val dataParsed = featureEngineering(data)
 
     // Splitting
     val Array(trainSet, testSet) = dataParsed.randomSplit(Array(0.75, 0.25))
     trainSet.cache()
 
-    //Modelling
+    // Modelling
     val model = NaiveBayes.train(trainSet, lambda = 1.0)
 
     // Evaluation

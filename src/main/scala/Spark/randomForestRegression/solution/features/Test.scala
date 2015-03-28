@@ -4,10 +4,6 @@ package spark.randomForestRegression.solution.features
 import org.joda.time.DateTime
 
 
-/**
- *
- * Created by albanphelip on 25/03/15.
- */
 object Test {
 
   def main(args: Array[String]): Unit ={

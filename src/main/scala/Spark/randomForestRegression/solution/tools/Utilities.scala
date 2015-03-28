@@ -5,11 +5,6 @@ import org.apache.spark.mllib.regression.LabeledPoint
 import org.apache.spark.mllib.tree.model.RandomForestModel
 import org.apache.spark.rdd.RDD
 
-/**
- *
- * Created by Yoann on 24/02/15.
- */
-
 object Utilities {
 
   def extractHeader(rdd: RDD[String]): (String, RDD[String]) = {
@@ -18,16 +13,14 @@ object Utilities {
     val schema = rdd.first()
 
     // Remove first line from first partition only
-    return (schema, rdd.mapPartitionsWithIndex(
-      (partitionIdx: Int, lines: Iterator[String]) => {
-        if (partitionIdx == 0) {
-          lines.drop(1)
-        }
-        else {
-          lines
-        }
+    (schema, rdd.mapPartitionsWithIndex( (partitionIdx: Int, lines: Iterator[String]) => {
+      if (partitionIdx == 0) {
+        lines.drop(1)
       }
-    ))
+      else {
+        lines
+      }
+    }))
   }
 
 

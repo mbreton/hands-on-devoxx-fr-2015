@@ -27,9 +27,12 @@ object randomForestRegression {
 
     // Model tuning
     val categoricalFeaturesInfo = Map(0 -> 7, 1 -> 12, 3 -> 4, 6 -> 4)
+    val numTreesGrid = Array(10)
+    val maxDepthGrid = Array(2)
+    val maxBinsGrid = Array(12)
     val bestParams = gridSearchRandomForestRegressor(trainSet, valSet,
-      categoricalFeaturesInfo = categoricalFeaturesInfo, maxDepthGrid = Array(20, 30),
-      maxBinsGrid = Array(50, 100, 200), numTreesGrid = Array(100))
+      categoricalFeaturesInfo = categoricalFeaturesInfo, maxDepthGrid = maxDepthGrid,
+      maxBinsGrid = maxBinsGrid, numTreesGrid = numTreesGrid)
 
     // Modelling
     val dataTrain = sc.union(trainSet, valSet)
