@@ -212,7 +212,7 @@
                 <p>S : C'est un spam</p>
                 <p>$$p(S|M) = \frac{p(M|S) p(S)}{p(M)}$$</p>
             </section>
-            <section>
+            <section id="naive-too-long">
                 <p>$$p(S|W_1,...,W_n) = \frac{p(W_1,...,W_n|S) p(S)}{p(W_1,...,W_n)}$$</p>
             </section>
             <section>
@@ -227,12 +227,12 @@
                 $$p(W_1,...W_n|S)=\prod_{i=1}^{N}{p(W_i|S)}$$
                 $$k=\frac{\prod_{i=1}^{N}{p(W_i|S=1)p(S=1)}}{\prod_{i=1}^{N}{p(W_i|S=0) * p(S=0)}}$$
             </section>
-            <section>
+            <section id="naive-4">
                 <h4>Du coup ?</h4>
-                $$k=\frac{\prod_{i=1}^{N}{p(W_i|S=1)p(S=1)}}{\prod_{i=1}^{N}{p(W_i|S=0) * p(S=0)}}$$
-                $$p(S=1)=\frac{\text{nombre de spams observés}}{\text{nombre total de messages}}$$
-                $$p(S=0) = 1 - p(S=1)$$
-                $$p(W_i|S=t)=\frac{\text{nombre de messages de type t dans lesquels W_i apparait}}{\text{nombre de messages de type t}}$$
+                <p>$$k=\frac{\prod_{i=1}^{N}{p(W_i|S=1)p(S=1)}}{\prod_{i=1}^{N}{p(W_i|S=0) * p(S=0)}}$$</p>
+                <p>$$p(S=1)=\frac{\text{nombre de spams observés}}{\text{nombre total de messages}}$$</p>
+                <p>$$p(S=0) = 1 - p(S=1)$$</p>
+                <p>$$p(W_i|S=t)=\frac{\text{nombre de messages de type t dans lesquels }W_i\text{ apparait}}{\text{nombre de messages de type t}}$$</p>
             </section>
             <section>
                 <h2>Implémentation</h2>
@@ -252,22 +252,48 @@
             <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161394/logo_hadoop.png">
         </section>
         <section>
-            <h3>MapReduce</h3>
-            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1158538/hbase.png">
-            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1158543/storm.png">
-            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161329/hive3.png">
-            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161474/apache.png">
-            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161546/hdfs.png">
-            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161548/Mapreduce.png">
-            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1165414/MRSandwich.png">
+            <div class="center">
+                <img height="180px" src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161474/apache.png">
+                <div class="fragment">
+                    <div style="width:49%;display: inline-block;">
+                        <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161546/hdfs.png">
+                    </div>
+                    <div style="width:49%;display: inline-block;">
+                        <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161548/Mapreduce.png">
+                    </div>
+                </div>
+                <div class="fragment">
+                    <div style="width:32.9%;display: inline-block;">
+                        <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161329/hive3.png">
+                    </div>
+                    <div style="width:32.9%;display: inline-block;text-align: center;">
+                        <img src="images/pig.png">
+                        <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1158543/storm.png">
+                    </div>
+                    <div style="width:32.9%;display: inline-block;">
+                        <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1158538/hbase.png">
+                    </div>
+                </div>
+            </div>
+
         </section>
         <section>
             <h3>MapReduce</h3>
-            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161437/example-mapreduce-wordcount.png">
+            <div class="center">
+                <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1165414/MRSandwich.png">
+            </div>
         </section>
         <section>
-            <p>Beaucoup de lecture/écriture sur disque&nbsp;</p>
-            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161408/disque-dur.png">
+            <h3>MapReduce</h3>
+            <div class="center">
+                <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161437/example-mapreduce-wordcount.png">
+            </div>
+        </section>
+        <section>
+            <div class="center">
+                <p>Beaucoup de lecture/écriture sur disque&nbsp;</p>
+                <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161408/disque-dur.png">
+            </div>
         </section>
         <section>
             <p>Très verbeux...</p>
@@ -341,17 +367,33 @@ public class WordCount {
             <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161401/spark_logo.png">
         </section>
         <section data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1165451/baby.jpg">
-            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1158822/amplab_hires.png">
+            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1158822/amplab_hires.png" height="78px">
         </section>
         <section data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1165447/renaud.jpg">
-            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161563/apache.png">
+            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161563/apache.png" style="margin-left:13em">
         </section>
         <section data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1165444/success.jpg">
-            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1158993/spark-stack.png">
-            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1159009/java.png">
-            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1159016/scala2.png">
-            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1159017/python.png">
-            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1184057/r.png"></section>
+            <img src="images/databricks.png" height="98px">
+        </section>
+        <section>
+            <div class="center"><img src="images/RAM.png"></div>
+        </section>
+        <section>
+            <div class="center">
+                <div style="display: inline-block;width:32.9%">
+                    <img width="161px" src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1159009/java.png">
+                </div>
+                <div style="display: inline-block;width:32.9%">
+                    <img width="131px" src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1159016/scala2.png">
+                    <br/>
+                    <img width="210px" class="fragment" src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1184057/r.png">
+                </div>
+                <div style="display: inline-block;width:32.9%">
+                    <img width="260px" src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1159017/python.png">
+                </div>
+                <img style="height:225px; display: inline-block;height:50%" src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1158993/spark-stack.png">
+            </div>
+        </section>
         <section>
             <h3>Resilient Distributed Datasets</h3>
 
@@ -364,7 +406,9 @@ public class WordCount {
         </section>
         <section>
             <h1>Un RDD est immutable</h1>
-            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161567/Information.png">
+            <div class="center">
+                <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161567/Information.png">
+            </div>
         </section>
         <section>
             <h3>Quelques exemples</h3>
@@ -417,9 +461,8 @@ val count = textFile.flatMap(line => line.split(" "))
 textFile.saveAsTextFile("/path/to/file")
             </code></pre>
         </section>
-        <section
-                data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1165437/machine-learning.jpg">
-            <h3>MLlib</h3>
+        <section data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1165437/machine-learning.jpg">
+            <h2 style="text-align: right">MLlib</h2>
         </section>
         <section>
             <ul>
@@ -501,7 +544,7 @@ val sameModel = NaiveBayesModel.load(sc, "myModelPath")
             <h3>Arbres de décision</h3>
             <section>
                 <h4>Une démarche courante</h4>
-                <div>
+                <div class="half">
                     <p>Algorithme récursif: A chaque étape, on split le jeu
                         de données en se basant sur le test d'une feature.
                     </p>
@@ -512,7 +555,7 @@ val sameModel = NaiveBayesModel.load(sc, "myModelPath")
                         Exemple: Savoir si un enfant peut oui ou non aller jouer dehors avec son ami.
                     </p>
                 </div>
-                <div>
+                <div class="half">
                     <img src="images/arbre2.png">
                 </div>
             </section>
@@ -537,7 +580,7 @@ val sameModel = NaiveBayesModel.load(sc, "myModelPath")
             </section>
             <section>
                 <h4>Gain en information</h4>
-                <img src="images/arbre.png" >
+                <img src="images/arbre.png" height="200px">
                 <p>Comment mesurer la réduction d'incertitude ?</p>
                 <p>Information Gain $$IG = H_0 - (\frac{|T_{1,1}|}{|T_0|}H_{1,1} + \frac{|T_{1,2}|}{|T_0|}H_{1,2})$$</p>
                 <p>A chaque split, on teste toutes les features encore à disposition, et on sélectionne la feature permettant le gain en information le plus important</p>
