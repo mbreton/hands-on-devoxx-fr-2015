@@ -52,7 +52,6 @@
                 <li>Présentation de Spark & MLlib</li>
                 <li>Naivge Bayes avec Spark</li>
                 <li>Random Forest avec Spark</li>
-                </li>
             </ol>
             <aside class="notes">
                 <!-- Put our comments her -->
@@ -88,6 +87,251 @@
 
             <p>Classification</p>
 
+        </section>
+        <section>
+            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161394/logo_hadoop.png">
+        </section>
+        <section>
+            <h2>MapReduce</h2>
+            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1158538/hbase.png">
+            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1158543/storm.png">
+            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161329/hive3.png">
+            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161474/apache.png">
+            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161546/hdfs.png">
+            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161548/Mapreduce.png">
+            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1165414/MRSandwich.png">
+        </section>
+        <section>
+            <h2>MapReduce</h2>
+            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161437/example-mapreduce-wordcount.png">
+        </section>
+        <section>
+            <p>Beaucoup de lecture/écriture sur disque&nbsp;</p>
+            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161408/disque-dur.png">
+        </section>
+        <section>
+            <p>Très verbeux...</p>
+            <pre class="java"><code class="hljs">
+package org.myorg;
+
+import java.io.IOException;
+import java.util.*;
+
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.conf.*;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapreduce.*;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+
+public class WordCount {
+
+public static class Map extends Mapper&lt;LongWritable, Text, Text, IntWritable> {
+private final static IntWritable one = new IntWritable(1);
+private Text word = new Text();
+
+public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+String line = value.toString();
+StringTokenizer tokenizer = new StringTokenizer(line);
+while (tokenizer.hasMoreTokens()) {
+word.set(tokenizer.nextToken());
+context.write(word, one);
+}
+}
+}
+
+public static class Reduce extends Reducer&lt;Text, IntWritable, Text, IntWritable> {
+
+public void reduce(Text key, Iterable&lt;IntWritable> values, Context context)
+throws IOException, InterruptedException {
+int sum = 0;
+for (IntWritable val : values) {
+sum += val.get();
+}
+context.write(key, new IntWritable(sum));
+}
+}
+
+public static void main(String[] args) throws Exception {
+Configuration conf = new Configuration();
+
+Job job = new Job(conf, "wordcount");
+
+job.setOutputKeyClass(Text.class);
+job.setOutputValueClass(IntWritable.class);
+
+job.setMapperClass(Map.class);
+job.setReducerClass(Reduce.class);
+
+job.setInputFormatClass(TextInputFormat.class);
+job.setOutputFormatClass(TextOutputFormat.class);
+
+FileInputFormat.addInputPath(job, new Path(args[0]));
+FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
+job.waitForCompletion(true);
+}
+
+}
+            </code></pre>
+        </section>
+        <section>
+            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161401/spark_logo.png">
+        </section>
+        <section data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1165451/baby.jpg">
+            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1158822/amplab_hires.png">
+        </section>
+        <section data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1165447/renaud.jpg">
+            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161563/apache.png">
+        </section>
+        <section data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1165444/success.jpg">
+            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1158993/spark-stack.png">
+            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1159009/java.png">
+            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1159016/scala2.png">
+            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1159017/python.png">
+            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1184057/r.png"></section>
+        <section>
+            <h2>Resilient Distributed Datasets</h2>
+            <p><strong>Transformations</strong> (e.g. map, filter, groupBy)</p>
+            <p><strong>Actions</strong> (e.g.&nbsp;count, collect)</p>
+            <p><strong>Opérations</strong></p>
+            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161476/rdd.png">
+        </section>
+        <section>
+            <h1>Un RDD est immutable</h1>
+            <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161567/Information.png">
+        </section>
+        <section>
+            <h2>Quelques exemples</h2>
+            <pre class="scala"><code class="hljs">
+scala> val textFile = sc.textFile("README.md")
+textFile: org.apache.spark.rdd.RDD[String] = README.md MappedRDD[3] at textFile at &lt;console>:12
+
+scala> textFile.count()
+res0: Long = 141
+
+scala> textFile.first()
+res1: String = # Apache Spark
+
+scala> val linesWithSpark = textFile.filter(line => line.contains("Spark"))
+linesWithSpark: org.apache.spark.rdd.RDD[String] = FilteredRDD[4] at filter at &lt;console>:14
+
+scala> linesWithSpark.count()
+res2: Long = 21
+
+scala> textFile.cache()
+res3: textFile.type = README.md MappedRDD[1] at textFile at &lt;console>:12
+            </code></pre>
+        </section>
+        <section>
+            <h2>Quelques commandes utiles</h2>
+            <pre><code class="hljs scala">
+val textFile = sc.textFile("README.md")
+
+// Prendre les 10 premières ligne d'un RDD
+val first10 = textFile.take(10)
+
+// Les afficher
+first10.foreach(println)
+
+// Les tuples
+val tuple = ("key1", 3)
+println(tuple._1) // Affiche key1
+println(tuple._2) // Affiche 3
+            </code></pre>
+        </section>
+        <section>
+            <h2>MapReduce</h2>
+            <pre class="scala"><code class="hljs">
+val textFile = sc.textFile("README.md")
+
+val count = textFile.flatMap(line => line.split(" "))
+.map(word => (word, 1))
+.reduce(_+_)
+
+textFile.saveAsTextFile("/path/to/file")
+            </code></pre>
+        </section>
+        <section data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1165437/machine-learning.jpg">
+            <h3>MLlib</h3>
+        </section>
+        <section>
+            <ul>
+                <li>Kmeans</li>
+                <li>Naive Bayes</li>
+                <li>Random Forests</li>
+                <li>Regressions (logistic&nbsp;&amp;&nbsp;linear)</li>
+                <li>Support Vector Machine</li>
+                <li>Decision Trees</li>
+                <li>Gradient Boosting</li>
+                <li>Alternative Least Square</li>
+                <li>Principal Component Analysis</li>
+                <li>Stochastic Gradient Descent</li>
+            </ul>
+        </section>
+        <section>
+            <h2>Les Vectors</h2>
+            <pre class="scala"><code class="hljs">
+import org.apache.spark.mllib.linalg.{Vector, Vectors}
+
+// Create a dense vector (1.0, 0.0, 3.0).
+val dv = Vectors.dense(1.0, 0.0, 3.0)
+
+// Create a sparse vector (1.0, 0.0, 3.0).
+val sv1 = Vectors.sparse(3, Array(0, 2), Array(1.0, 3.0))
+
+// Create a sparse vector (1.0, 0.0, 3.0).
+val sv2 = Vectors.sparse(3, Seq((0, 1.0), (2, 3.0)))
+            </code></pre>
+
+        </section>
+        <section>
+            <h2>Les Labeled Point</h2>
+            <pre class="scala"><code class="hljs">
+import org.apache.spark.mllib.linalg.Vectors
+import org.apache.spark.mllib.regression.LabeledPoint
+
+// Create a labeled point with a positive label and a dense feature vector.
+val pos = LabeledPoint(1.0, Vectors.dense(1.0, 0.0, 3.0))
+
+// Create a labeled point with a negative label and a sparse feature vector.
+val neg = LabeledPoint(0.0, Vectors.sparse(3, Array(0, 2), Array(1.0, 3.0)))
+            </code></pre>
+        </section>
+        <section>
+            <h2>Un exemple : le Naïve Bayes</h2>
+            <pre class="scala"><code class="hljs">
+import org.apache.spark.mllib.linalg.Vectors
+import org.apache.spark.mllib.regression.LabeledPoint
+import org.apache.spark.mllib.classification.{NaiveBayes, NaiveBayesModel}
+
+val data = sc.textFile("data/mllib/sample_naive_bayes_data.txt")
+
+val parsedData = data.map { line =>
+val parts = line.split(',')
+LabeledPoint(parts(0).toDouble, Vectors.dense(parts(1).split(' ').map(_.toDouble)))
+}
+            </code></pre>
+        </section>
+        <section>
+            <h2>Un exemple&nbsp;: le Naïve Bayes</h2>
+            <pre class="scala"><code class=" hljs ">
+// Split data into training (60%) and test (40%).
+val Array(training, test) = parsedData.randomSplit(Array(0.6, 0.4), seed = 11L)
+
+// Model construction
+val model = NaiveBayes.train(training, lambda = 1.0)
+
+// Prediction
+val predictionAndLabel = test.map(p => (model.predict(p.features), p.label))
+val accuracy = 1.0 * predictionAndLabel.filter(x => x._1 == x._2).count() / test.count()
+
+// Save and load model
+model.save(sc, "myModelPath")
+val sameModel = NaiveBayesModel.load(sc, "myModelPath")
+            </code></pre>
         </section>
     </div>
     <div class="footer">
