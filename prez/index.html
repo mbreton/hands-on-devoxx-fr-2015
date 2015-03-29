@@ -83,16 +83,176 @@
             </section>
         </section>
         <section>
-            <h2>Cas d'utilisation</h2>
-
+            <h3>Cas d'utilisation</h3>
             <p>Classification</p>
-
+        </section>
+        <section>
+            <h3>Cas d'utilisation</h3>
+            <div>
+                <p>Régréssion</p>
+            </div>
+            <div>
+                <p>Graph</p>
+            </div>
+        </section>
+        <section>
+            <h3>Cas d'utilisation</h3>
+            <div>
+                <p>Recommandation</p>
+                <img src="images/reco.jpg" >
+            </div>
+            <div>
+                <p>Graph</p>
+            </div>
+        </section>
+        <section>
+            <h3>Cas d'utilisation</h3>
+            <div>
+                <p>Clustering</p>
+                <img src="images/reco.jpg" >
+            </div>
+            <div>
+                <p>Clustering</p>
+            </div>
+        </section>
+        <section>
+            <h3>Approches : supervisé (dirigé)</h3>
+               On dispose d'exemples, et pour chaque exemple, le résultat attendu.
+            <p>
+                Ex: Des tweets et leurs tags associés
+            </p>
+        </section>
+        <section>
+            <h3>Approches : non supervisé</h3>
+            On dispose de données brutes, mais pas de résultat attendu. Juste des données brutes.
+            <p>
+                Ex: Logs server web
+            </p>
+        </section>
+        <section>
+            <h3>Approches : apprentissage par renforcement</h3>
+            Pour chaque état dans notre domaine, on peut associer une récompense.
+            <p>
+                Ex: Vol acrobatique d'hélicoptère
+            </p>
+            <a href="http://cs.stanford.edu/groups/helicopter/papers/nips06-aerobatichelicopter.pdf">cs.stanford.edu/groups/helicopter/papers/nips06-aerobatichelicopter.pdf</a>
+        </section>
+        <section>
+            <h3>Comment en arrive-t'on à avoir besoin de ML ?</h3>
+            <ol>
+                <li>On observe un phénomène</li>
+                <li>On a du mal à trouver un algo précis</li>
+                <li>On utilise un algo qui va apprendre à approximer le phénomène réel</li>
+            </ol>
+        </section>
+        <section>
+            <h3>A l'utilisation, comment ça se passe ?</h3>
+            Le machine Machine learning c'est comme la crypto
+            <p>Utilisez des implémentations éprouvées.</p>
+        </section>
+        <section>
+            <h2>Mais à quoi "ça" ressemble ?</h2>
+        </section>
+        <section>
+            <h3>Kmeans</h3>
+            <section>
+                <p>Type: Non supervisé</p>
+                <p>But: Trouver des groupes dans un jeu de données</p>
+            </section>
+            <section>
+                <p>Exemple : Quels groupes puis-je identifier dans ma base client ?</p>
+            </section>
+            <section>
+                <ul>
+                    <li>Client 1 : 24ans, 1 exemplaire</li>
+                    <li>Client 2 : 32ans, 2 exemplaires</li>
+                    <li>Client 3 : 27ans, 5 exemplaires</li>
+                </ul>
+            </section>
+            <section>
+                (24;1), (32;2), (37;5)
+            </section>
+            <section>
+                <img src="images/kmean1.png">
+            </section>
+            <section>
+                <img src="images/kmean2.png">
+            </section>
+            <section>
+                <img src="images/kmean3.png">
+            </section>
+            <section>
+                <img src="images/kmean4.png">
+            </section>
+            <section>
+                <img src="images/kmean5.png">
+            </section>
+            <section>
+                <img src="images/kmean6.png">
+            </section>
+        </section>
+        <section>
+            <h2>Classification naive Bayesienne</h2>
+        </section>
+        <section>
+            <h3>Classification naive Bayesienne</h3>
+            <section>
+                <p>Type: Supervisé</p>
+                <p>But: Déterminer la catégorie d'un élément</p>
+            </section>
+            <section>
+                <p>Probabilités</p>
+                <p>&Omega;, F, P</p>
+            </section>
+            <section>
+                <p>$$p(A|B) = \frac{p(B|A) p(A)}{p(B)}$$</p>
+            </section>
+            <section>
+                <p>M : J'ai un message M</p>
+                <p>S : C'est un spam</p>
+                <p>$$p(S|M) = \frac{p(M|S) p(S)}{p(M)}$$</p>
+            </section>
+            <section>
+                <p>$$p(S|W_1,...,W_n) = \frac{p(W_1,...,W_n|S) p(S)}{p(W_1,...,W_n)}$$</p>
+            </section>
+            <section>
+                $$k=\frac{p(S=1|W_1,...,W_n)}{p(S=0|W_1,...,W_n)}= \frac{p(W_1,...,W_n|S=1)* p(S=1)}{p(W_1,...,W_n)}*\frac{p(W_1,...,W_n)}{p(W_1,...,W_n|S=0)* p(S=0)}$$
+            </section>
+            <section>
+                <p>Hypothèse dans le cas naif : indépendance</p>
+                $$p(A,B|C)=p(A|C)p(B|C)$$
+                $$p(W_1,...W_n|S=1)=p(W_1|S=1) p(W_2|S=1)...(W_n|S=1)$$
+            </section>
+            <section>
+                $$p(W_1,...W_n|S)=\prod_{i=1}^{N}{p(W_i|S)}$$
+                $$k=\frac{\prod_{i=1}^{N}{p(W_i|S=1)p(S=1)}}{\prod_{i=1}^{N}{p(W_i|S=0) * p(S=0)}}$$
+            </section>
+            <section>
+                <h4>Du coup ?</h4>
+                $$k=\frac{\prod_{i=1}^{N}{p(W_i|S=1)p(S=1)}}{\prod_{i=1}^{N}{p(W_i|S=0) * p(S=0)}}$$
+                $$p(S=1)=\frac{\text{nombre de spams observés}}{\text{nombre total de messages}}$$
+                $$p(S=0) = 1 - p(S=1)$$
+                $$p(W_i|S=t)=\frac{\text{nombre de messages de type t dans lesquels W_i apparait}}{\text{nombre de messages de type t}}$$
+            </section>
+            <section>
+                <h2>Implémentation</h2>
+            </section>
+            <section>
+                <h3>Un peu de recul sur l'algo</h3>
+                Est-ce un bon score ? (> 0.5 et |spam|/|total| ?)<br/>
+                Est-ce que mes données d'entraînement sont suffisament représentatives ?<br/>
+                Est-ce que mes résultats se généralisent<br/>
+                L'approche naïve est elle pertinente ?
+                <aside class="notes">
+                    données représentatives: est-ce que le ratio nb spam/nb ham est représentatif de ce que l’on retrouve dans la nature ? (vu le point de ce rapport)
+                </aside>
+            </section>
         </section>
         <section>
             <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161394/logo_hadoop.png">
         </section>
         <section>
-            <h2>MapReduce</h2>
+            <h3>MapReduce</h3>
             <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1158538/hbase.png">
             <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1158543/storm.png">
             <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161329/hive3.png">
@@ -102,7 +262,7 @@
             <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1165414/MRSandwich.png">
         </section>
         <section>
-            <h2>MapReduce</h2>
+            <h3>MapReduce</h3>
             <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161437/example-mapreduce-wordcount.png">
         </section>
         <section>
@@ -128,51 +288,51 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 public class WordCount {
 
-public static class Map extends Mapper&lt;LongWritable, Text, Text, IntWritable> {
-private final static IntWritable one = new IntWritable(1);
-private Text word = new Text();
+    public static class Map extends Mapper&lt;LongWritable, Text, Text, IntWritable> {
+        private final static IntWritable one = new IntWritable(1);
+        private Text word = new Text();
 
-public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-String line = value.toString();
-StringTokenizer tokenizer = new StringTokenizer(line);
-while (tokenizer.hasMoreTokens()) {
-word.set(tokenizer.nextToken());
-context.write(word, one);
-}
-}
-}
+        public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+            String line = value.toString();
+            StringTokenizer tokenizer = new StringTokenizer(line);
+            while (tokenizer.hasMoreTokens()) {
+                word.set(tokenizer.nextToken());
+                context.write(word, one);
+            }
+        }
+    }
 
-public static class Reduce extends Reducer&lt;Text, IntWritable, Text, IntWritable> {
+    public static class Reduce extends Reducer&lt;Text, IntWritable, Text, IntWritable> {
 
-public void reduce(Text key, Iterable&lt;IntWritable> values, Context context)
-throws IOException, InterruptedException {
-int sum = 0;
-for (IntWritable val : values) {
-sum += val.get();
-}
-context.write(key, new IntWritable(sum));
-}
-}
+        public void reduce(Text key, Iterable&lt;IntWritable> values, Context context)
+            throws IOException, InterruptedException {
+            int sum = 0;
+            for (IntWritable val : values) {
+                sum += val.get();
+            }
+            context.write(key, new IntWritable(sum));
+        }
+    }
 
-public static void main(String[] args) throws Exception {
-Configuration conf = new Configuration();
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
 
-Job job = new Job(conf, "wordcount");
+        Job job = new Job(conf, "wordcount");
 
-job.setOutputKeyClass(Text.class);
-job.setOutputValueClass(IntWritable.class);
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);
 
-job.setMapperClass(Map.class);
-job.setReducerClass(Reduce.class);
+        job.setMapperClass(Map.class);
+        job.setReducerClass(Reduce.class);
 
-job.setInputFormatClass(TextInputFormat.class);
-job.setOutputFormatClass(TextOutputFormat.class);
+        job.setInputFormatClass(TextInputFormat.class);
+        job.setOutputFormatClass(TextOutputFormat.class);
 
-FileInputFormat.addInputPath(job, new Path(args[0]));
-FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
-job.waitForCompletion(true);
-}
+        job.waitForCompletion(true);
+    }
 
 }
             </code></pre>
@@ -193,9 +353,12 @@ job.waitForCompletion(true);
             <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1159017/python.png">
             <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1184057/r.png"></section>
         <section>
-            <h2>Resilient Distributed Datasets</h2>
+            <h3>Resilient Distributed Datasets</h3>
+
             <p><strong>Transformations</strong> (e.g. map, filter, groupBy)</p>
+
             <p><strong>Actions</strong> (e.g.&nbsp;count, collect)</p>
+
             <p><strong>Opérations</strong></p>
             <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161476/rdd.png">
         </section>
@@ -204,7 +367,7 @@ job.waitForCompletion(true);
             <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161567/Information.png">
         </section>
         <section>
-            <h2>Quelques exemples</h2>
+            <h3>Quelques exemples</h3>
             <pre class="scala"><code class="hljs">
 scala> val textFile = sc.textFile("README.md")
 textFile: org.apache.spark.rdd.RDD[String] = README.md MappedRDD[3] at textFile at &lt;console>:12
@@ -226,7 +389,7 @@ res3: textFile.type = README.md MappedRDD[1] at textFile at &lt;console>:12
             </code></pre>
         </section>
         <section>
-            <h2>Quelques commandes utiles</h2>
+            <h3>Quelques commandes utiles</h3>
             <pre><code class="hljs scala">
 val textFile = sc.textFile("README.md")
 
@@ -243,7 +406,7 @@ println(tuple._2) // Affiche 3
             </code></pre>
         </section>
         <section>
-            <h2>MapReduce</h2>
+            <h3>MapReduce</h3>
             <pre class="scala"><code class="hljs">
 val textFile = sc.textFile("README.md")
 
@@ -254,7 +417,8 @@ val count = textFile.flatMap(line => line.split(" "))
 textFile.saveAsTextFile("/path/to/file")
             </code></pre>
         </section>
-        <section data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1165437/machine-learning.jpg">
+        <section
+                data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1165437/machine-learning.jpg">
             <h3>MLlib</h3>
         </section>
         <section>
@@ -272,7 +436,7 @@ textFile.saveAsTextFile("/path/to/file")
             </ul>
         </section>
         <section>
-            <h2>Les Vectors</h2>
+            <h3>Les Vectors</h3>
             <pre class="scala"><code class="hljs">
 import org.apache.spark.mllib.linalg.{Vector, Vectors}
 
@@ -288,7 +452,7 @@ val sv2 = Vectors.sparse(3, Seq((0, 1.0), (2, 3.0)))
 
         </section>
         <section>
-            <h2>Les Labeled Point</h2>
+            <h3>Les Labeled Point</h3>
             <pre class="scala"><code class="hljs">
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.mllib.regression.LabeledPoint
@@ -301,7 +465,7 @@ val neg = LabeledPoint(0.0, Vectors.sparse(3, Array(0, 2), Array(1.0, 3.0)))
             </code></pre>
         </section>
         <section>
-            <h2>Un exemple : le Naïve Bayes</h2>
+            <h3>Un exemple : le Naïve Bayes</h3>
             <pre class="scala"><code class="hljs">
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.mllib.regression.LabeledPoint
@@ -316,7 +480,7 @@ LabeledPoint(parts(0).toDouble, Vectors.dense(parts(1).split(' ').map(_.toDouble
             </code></pre>
         </section>
         <section>
-            <h2>Un exemple&nbsp;: le Naïve Bayes</h2>
+            <h3>Un exemple&nbsp;: le Naïve Bayes</h3>
             <pre class="scala"><code class=" hljs ">
 // Split data into training (60%) and test (40%).
 val Array(training, test) = parsedData.randomSplit(Array(0.6, 0.4), seed = 11L)
@@ -332,6 +496,77 @@ val accuracy = 1.0 * predictionAndLabel.filter(x => x._1 == x._2).count() / test
 model.save(sc, "myModelPath")
 val sameModel = NaiveBayesModel.load(sc, "myModelPath")
             </code></pre>
+        </section>
+        <section>
+            <h3>Arbres de décision</h3>
+            <section>
+                <h4>Une démarche courante</h4>
+                <div>
+                    <p>Algorithme récursif: A chaque étape, on split le jeu
+                        de données en se basant sur le test d'une feature.
+                    </p>
+                    <p>
+                        Choix de la feature: Celle qui réduit le plus notre incertitude sur la classification.
+                    </p>
+                    <p>
+                        Exemple: Savoir si un enfant peut oui ou non aller jouer dehors avec son ami.
+                    </p>
+                </div>
+                <div>
+                    <img src="images/arbre2.png">
+                </div>
+            </section>
+            <section>
+                <h4>Mesre de l'incertitude: Entropie</h4>
+                <p>Entropie: Permet de quantifier le degré d'incertitude sur une variable. Mesurée en bits.</p>
+                $$H(X) = - \sum_{k=1}^{K}{P(x_k) log(P(x_k))}$$
+                <p>Exemple: X = Résultat d'un lancer de pièce.</p>
+                $$H(X) = - [P(X=Pile) log(P(X=Pile)) + P(X=Face) log(P(X=Face))]$$
+                <div>
+                    <div>
+                        Si pièce non truquée:
+                        $$P(x=Pile) = P(X=Face) = 0.5$$
+                        $$H(X) = -(0.5*log(0.5) + 0.5*log(0.5)) = 1 bit$$
+                    </div>
+                    <div>
+                        Si pièce non truquée:
+                        $$P(x=Pile) = 0.8; P(X=Face) = 0.2$$
+                        $$H(X) = -(0.8*log(0.8) + 0.2*log(0.2)) = 0.722 bit$$
+                    </div>
+                </div>
+            </section>
+            <section>
+                <h4>Gain en information</h4>
+                <img src="images/arbre.png" >
+                <p>Comment mesurer la réduction d'incertitude ?</p>
+                <p>Information Gain $$IG = H_0 - (\frac{|T_{1,1}|}{|T_0|}H_{1,1} + \frac{|T_{1,2}|}{|T_0|}H_{1,2})$$</p>
+                <p>A chaque split, on teste toutes les features encore à disposition, et on sélectionne la feature permettant le gain en information le plus important</p>
+            </section>
+        </section>
+        <section>
+            <h3>Random Forest</h3>
+            <section>
+                <p>Instabilité des arbres de décision: Faible changement dans les données peut entraîner un arbre totalement différent.</p>
+                <p>Idée: Créer plusieurs arbres et rassembler les prédictions pour prendre une décision finale plus stable.</p>
+                <p>
+                    Principe:
+                <ul>
+                    <li>Chaque arbre est construit à partir de tirages avec replacement de l'ensemble d'apprentissage -> Ajout d'aléatoire dans les données</li>
+                    <li>Pour chaque split de chaque arbre: Choix de la meilleure feature à partir d'un sous-ensemble des features à disposition -> Ajout d'aléatoire dans le choix des features</li>
+                </ul>
+                </p>
+                <p>Conclusion: Moins interprétable (perte de la structure hiérarchique) mais gain en stabilité et robustessen</p>
+            </section>
+            <section>
+                <h4>Prédiction</h4>
+                <p>Prediction de la classe d'une nouvelle donnée</p>
+                Pour chaque arbre, on descend noeud par noeud en suivant les règles apprises, jusqu'à obtenir la classe prédite.<br/>
+                Pour B arbres, on a alors:
+                <p class="offset-left">$$\tilde{y_b}(x)$$ Prédiction pour l'arbre b</p>
+                <p class="offset-left">$$C_k(x)$$ Le nombre d'arbres pour lesquels la classe prédite est k</p>
+                <p>$$C_k(x) = \sum_{b=1}^{B}{I(\tilde{y_b}(x) = k)}$$</p>
+                <p>La prédiction finale est alors: $$\tilde{y}(x) = argmax_k(C_k(x))$$</p>
+            </section>
         </section>
     </div>
     <div class="footer">
@@ -355,10 +590,16 @@ val sameModel = NaiveBayesModel.load(sc, "myModelPath")
         history: true,
         center: true,
 
-        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        transition: 'slide', // none/fade/slide/convex/concave/zoom,
+
+        math: {
+            mathjax: 'http://cdn.mathjax.org/mathjax/latest/MathJax.js',
+            config: 'TeX-AMS_HTML-full'  // See http://docs.mathjax.org/en/latest/config-files.html
+        },
 
         // Optional reveal.js plugins
         dependencies: [
+            { src: 'plugin/math/math.js', async: true },
             {
                 src: 'lib/js/classList.js', condition: function () {
                 return !document.body.classList;
