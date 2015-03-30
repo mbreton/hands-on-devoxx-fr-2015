@@ -34,7 +34,6 @@ object Utilities {
     val predictionsAndLabels = data.map(example => (model.predict(example.features), example.label))
 
     // TODO 1 : Calculate the RMSE and change return
-    // math.sqrt(predictionsAndLabels.map{case(v,p) => math.pow((v - p), 2)}.mean())
     0d
   }
 

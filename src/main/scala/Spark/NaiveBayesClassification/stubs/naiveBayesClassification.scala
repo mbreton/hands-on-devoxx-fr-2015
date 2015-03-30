@@ -18,37 +18,22 @@ object NaiveBayesClassification {
 
     // Loading Data
     // TODO : Read File ./source/sms_train.csv
-    // val data = sc.textFile("./source/sms_train.csv")
 
     // Parsing & Feature Engineering
     // TODO : Modify the featureEngineering method in features/Engineering and parse the data
-    //val dataParsed: RDD[LabeledPoint] = featureEngineering(data)
 
     // Splitting
     // TODO : Split the dataset in a train and a test set (proportions 0.75, 0.25)
-    // val Array(trainSet, testSet) = dataParsed.randomSplit(Array(0.75, 0.25))
-    // trainSet.cache()
 
     // Modelling
     // TODO : Train a Naive Bayes model on the train set
-    // val model = NaiveBayes.train(trainSet, lambda = 1.0)
 
     // Evaluation
     // TODO : Calculate the precision and the confusion matrix after prediction on the test set.
     // TODO : Do the same for the train set for comparison
-    // val trainMetrics: MulticlassMetrics = getMetrics(model, trainSet)
-    // val testMetrics: MulticlassMetrics = getMetrics(model, testSet)
-
-    // val accuracyTrain = trainMetrics.precision
-    // val confusionTrain = trainMetrics.confusionMatrix
-    // val accuracyTest = testMetrics.precision
-    // val confusionTest = testMetrics.confusionMatrix
 
     // Print results
-    // println(s"Train Error: $accuracyTrain")
-    // println(s"Confusion Matrix on training set: \n $confusionTrain")
-    // println(s"Test Error: $accuracyTest")
-    // println(s"Confusion Matrix on test set: \n $confusionTest")
+
   }
 
 }

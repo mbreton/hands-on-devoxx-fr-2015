@@ -14,38 +14,26 @@ object RandomForestRegression {
     val sc = new SparkContext(conf)
 
     // Loading Data
-    // TODO : Read File ./source/bike_train.csv
-    //val data = sc.textFile("./source/bike_train.csv")
+    // TODO 1 : Read File ./source/bike_train.csv
 
     // Parsing Data & Feature Engineering
-    // TODO : use function of package tools to extract header
-    //val schemaData = extractHeader(data)
+    // TODO 1 : use function of package tools to extract header
+
     // TODO 1 : Modify the featureEngineering method in features/Engineering
     // TODO 3 : Modify the featureEngineering method in features/Engineering to add new features
 
-    // TODO : get the clean data
-    //val dataParsed = featureEngineering(schemaData._2)
+    // TODO 1 : get the clean data
 
     // Splitting
     // TODO 1 : Split the dataset in a train, a validation and a test set (proportions 0.8, 0.1, 0.1)
-    // val Array(trainSet, valSet, testSet) = dataParsed.randomSplit(Array(0.8, 0.1, 0.1))
-    // trainSet.cache()
-    // valSet.cache()
 
     // Model tuning
-    // TODO 2 : Set better parameters of your choice
+    // TODO 1 : Set the parameters of your choice to test randomForestTrainRegressor
     // TODO 4 : Modify gridSearchRandomForestRegressor in modelling/RandomForestObject to perform grid search
-    //val categoricalFeaturesInfo = Map(0 -> 4, 3 -> 4)
-    //val numTreesGrid = Array(10)
-    //val maxDepthGrid = Array(2)
-    //val maxBinsGrid = Array(12)
-    //val bestParams = gridSearchRandomForestRegressor(trainSet, valSet,
-    //  categoricalFeaturesInfo = categoricalFeaturesInfo, maxDepthGrid = maxDepthGrid,
-    //  maxBinsGrid = maxBinsGrid, numTreesGrid = numTreesGrid)
+
 
     // Modelling
-    //val dataTrain = sc.union(trainSet, valSet)
-    //val model = (randomForestTrainRegressor _).tupled(bestParams)(dataTrain)
+    // TODO 1 : Run randomForestRegressor (in package modelling) with the selected parameters
 
     // Evaluation
     // TODO 1 : Implement the calculateRMSE method in tools/Utilities
@@ -56,10 +44,7 @@ object RandomForestRegression {
 
 
     // Show Evaluation results
-    // TODO : print the results
-    //println(s"Best Parameters: ${bestParams}")
-    //println(s"Train Error: $rmseTrain")
-    //println(s"Test Error: $rmseTest")
+    // TODO 1 : Print the results
 
   }
 
