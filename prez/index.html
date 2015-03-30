@@ -243,7 +243,7 @@
                 <h3>Un peu de recul sur l'algo</h3>
                 Est-ce un bon score ? (> 0.5 et |spam|/|total| ?)<br/>
                 Est-ce que mes données d'entraînement sont suffisament représentatives ?<br/>
-                Est-ce que mes résultats se généralisent<br/>
+                Est-ce que mes résultats se généralisent ?<br/>
                 L'approche naïve est elle pertinente ?
                 <aside class="notes">
                     données représentatives: est-ce que le ratio nb spam/nb ham est représentatif de ce que l’on retrouve dans la nature ? (vu le point de ce rapport)
@@ -580,7 +580,7 @@ val sameModel = NaiveBayesModel.load(sc, "myModelPath")
                         $$H(X) = -(0.5*log(0.5) + 0.5*log(0.5)) = 1 bit$$
                     </div>
                     <div>
-                        Si pièce non truquée:
+                        Si pièce truquée:
                         $$P(x=Pile) = 0.8; P(X=Face) = 0.2$$
                         $$H(X) = -(0.8*log(0.8) + 0.2*log(0.2)) = 0.722 bit$$
                     </div>
@@ -599,9 +599,6 @@ val sameModel = NaiveBayesModel.load(sc, "myModelPath")
                     <img src="images/outlook.png">
                 </div>
                 <div class="half">
-                    <img src="images/tableau4.png" class="fragment">
-                </div>
-                <div>
                     <p>
                         $$H_{0} = - \frac{5}{10}log(\frac{5}{10}) - \frac{5}{10}log(\frac{5}{10}) = 1$$
                     </p>
@@ -615,37 +612,27 @@ val sameModel = NaiveBayesModel.load(sc, "myModelPath")
                         $$IG_{Outlook} = H_{0} -  (\frac{5}{10} * H_{1,1} + \frac{5}{10} * H_{1,2}) = 0.03$$
                     </p>
                 </div>
+                <div class="center">
+                    <img src="images/tableau4.png" class="fragment">
+                </div>
             </section>
         </section>
         <section>
             <h3>Random Forest</h3>
             <section>
-                <p><span class="bold">Instabilité des arbres de décision :</span> Faible changement dans les données peut entraîner un arbre totalement différent.</p>
-                <p><span class="bold">Idée : </span>Créer plusieurs arbres et rassembler les prédictions pour prendre une décision finale plus stable.</p>
-                <p><span class="bold">Principe:</span>
-                <ul>
-                    <li>Chaque arbre est construit à partir de tirages avec replacement de l'ensemble d'apprentissage -> Ajout d'aléatoire dans les données</li>
-                    <li>Pour chaque split de chaque arbre: Choix de la meilleure feature à partir d'un sous-ensemble des features à disposition -> Ajout d'aléatoire dans le choix des features</li>
-                </ul>
-                </p>
-                <p><span class="bold">Conclusion :</span> Moins interprétable (perte de la structure hiérarchique) mais gain en stabilité et robustesse</p>
-            </section>
-            <section id="random-forest-prediction">
-                <h4>Prédiction</h4>
-                <p><span class="bold">Prediction de la classe d'une nouvelle donnée</span></p>
-                Pour chaque arbre, on descend noeud par noeud en suivant les règles apprises, jusqu'à obtenir la classe prédite.<br/>
-                Pour B arbres, on a alors:
-                <p class="offset-left">
-                    <div style="display: inline-block;width: 200px">$$\tilde{y_b}(x)$$</div> Prédiction pour l'arbre b
-                </p>
-                <p class="offset-left" style="margin-top: 40px">
-                    <div style="display: inline-block;width: 200px">$$C_k(x)$$</div> Le nombre d'arbres pour lesquels la classe prédite est k</p>
-                <p>$$C_k(x) = \sum_{b=1}^{B}{I(\tilde{y_b}(x) = k)}$$</p>
-                <br/>
-                <p>
-                    La prédiction finale est alors :
-                    <span style="display: inline-block;margin-left: 20px;">$$\tilde{y}(x) = argmax_k(C_k(x))$$</span>
-                </p>
+                <div class="half">
+                    <img src="images/RandomForest.png">
+                </div>
+                <div class="half">
+                    <p><span class="bold">Idée : </span>Créer plusieurs arbres et rassembler les prédictions pour prendre une décision finale plus stable.</p>
+                    <p><span class="bold">Principe:</span>
+                        <ul>
+                            <li>Ajout d'aléatoire dans la sélection des données</li>
+                            <li>Ajout d'aléatoire dans la sélection des features</li>
+                        </ul>
+                    </p>
+                    <p><span class="bold">Conclusion :</span> Moins interprétable (perte de la structure hiérarchique) mais gain en stabilité et robustesse</p>
+                </div>
             </section>
         </section>
         <section>
@@ -704,41 +691,41 @@ df.groupBy("age").count().show()
             <section id="data_frame_exploration">
                 <h4>Exploration des données</h4>
                 <p class="offset-left">
-                    <p>
+                    <li>
                         Dans le shell, chargez le dataset dans un RDD, puis transformez-le en DataFrame
-                    </p>
-                    <p>
+                    </li>
+                    <li>
                         Observez quelques valeurs de chaque feature
-                    </p>
-                    <p>
+                    </li>
+                    <li>
                         Calculez quelques statistiques que chaque feature pour voir s'il n'y a pas de données manquantes ou d'outliers
-                    </p>
-                    <p>
+                    </li>
+                    <li>
                         Modifiez les données si besoin
-                    </p>
+                    </li>
                 </p>
             </section>
             <section id="data_science_pipeline">
                 <h4>Démarche globale en Data Science</h4>
                 <p class="offset-left">
-                    <p>
+                    <li>
                         Step 1 : Chargement des données
-                    </p>
-                    <p>
+                    </li>
+                    <li>
                         Step 2 : Feature Engineeging (Nettoyage, création et préparation des features)
-                    </p>
-                    <p>
+                    </li>
+                    <li>
                         Step 3 : Splitting (train, validation et test sets)
-                    </p>
-                    <p>
+                    </li>
+                    <li>
                         Step 4 : Tuning des paramètres (à la main ou grid search)
-                    </p>
-                    <p>
+                    </li>
+                    <li>
                         Step 5 : Modelling sur train+validation set
-                    </p>
-                    <p>
+                    </li>
+                    <li>
                         Step 6 : Prediction sur le test set
-                    </p>
+                    </li>
                 </p>
             </section>
             <section id="grid_search">
@@ -748,16 +735,16 @@ df.groupBy("age").count().show()
                         <span class="bold">Objectif</span> : Tester, pour chaque paramètre, plusieurs possibilités
                     </p>
                     <p>
-                        <span class="bold">Réalisation</span>
-                        <p>
+                        <span class="bold">Réalisation :</span>
+                        <li>
                             Pour chaque combinaison de paramètres, construire un modèle basé sur le train set
-                        </p>
-                        <p> 
+                        </li>
+                        <li> 
                             Calculer le score de prédiction de chaque modèle sur le validation set
-                        </p>
-                        <p>
+                        </li>
+                        <li>
                             Sélectionner le jeu de paramètres ayant donné le meilleur score
-                        </p>
+                        </li>
                     </p>
                 </p>
             </section>
