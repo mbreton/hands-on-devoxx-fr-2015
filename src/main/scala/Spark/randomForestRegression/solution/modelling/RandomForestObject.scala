@@ -39,10 +39,9 @@ object RandomForestObject {
           val model = RandomForest.trainRegressor(trainSet, categoricalFeaturesInfo, numTrees, featureSubsetStrategy,
             impurity, maxDepth, maxBins)
 
-          val accuracyTrain = calculateRMSE(model, trainSet)
           val accuracyVal = calculateRMSE(model, valSet)
 
-          ((numTrees, featureSubsetStrategy, maxDepth, maxBins), accuracyTrain, accuracyVal)
+          ((numTrees, featureSubsetStrategy, maxDepth, maxBins), accuracyVal)
         }
 
     val params = gridSearch.sortBy(_._2).take(1)(0)._1
