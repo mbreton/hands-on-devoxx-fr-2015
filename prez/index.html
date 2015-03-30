@@ -34,9 +34,9 @@
 
 <body>
 
-<div class="reveal convex center">
+<div class="reveal center">
     <div class="slides">
-        <section>
+        <section class="front-page" data-background-image="images/bg.png">
             <h1>Initiation au Machine Learning avec Spark</h1>
             <aside class="notes">
                 <!-- Put our comments her -->
@@ -405,7 +405,7 @@ public class WordCount {
             <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161476/rdd.png">
         </section>
         <section>
-            <h1>Un RDD est immutable</h1>
+            <h3>Un RDD est immutable</h3>
             <div class="center">
                 <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161567/Information.png">
             </div>
@@ -545,14 +545,12 @@ val sameModel = NaiveBayesModel.load(sc, "myModelPath")
             <section>
                 <h4>Une démarche courante</h4>
                 <div class="half">
-                    <p>Algorithme récursif: A chaque étape, on split le jeu
+                    <p><span class="bold">Algorithme récursif :</span> A chaque étape, on split le jeu
                         de données en se basant sur le test d'une feature.
                     </p>
-                    <p>
-                        Choix de la feature: Celle qui réduit le plus notre incertitude sur la classification.
+                    <p><span class="bold">Choix de la feature :</span> Celle qui réduit le plus notre incertitude sur la classification.
                     </p>
-                    <p>
-                        Exemple: Savoir si un enfant peut oui ou non aller jouer dehors avec son ami.
+                    <p><span class="bold">Exemple :</span> Savoir si un enfant peut oui ou non aller jouer dehors avec son ami.
                     </p>
                 </div>
                 <div class="half">
@@ -560,10 +558,10 @@ val sameModel = NaiveBayesModel.load(sc, "myModelPath")
                 </div>
             </section>
             <section>
-                <h4>Mesre de l'incertitude: Entropie</h4>
-                <p>Entropie: Permet de quantifier le degré d'incertitude sur une variable. Mesurée en bits.</p>
+                <h4>Mesure de l'incertitude: Entropie</h4>
+                <p><span class="bold">Entropie :</span> Permet de quantifier le degré d'incertitude sur une variable. Mesurée en bits.</p>
                 $$H(X) = - \sum_{k=1}^{K}{P(x_k) log(P(x_k))}$$
-                <p>Exemple: X = Résultat d'un lancer de pièce.</p>
+                <p><span class="bold">Exemple :</span> X = Résultat d'un lancer de pièce.</p>
                 $$H(X) = - [P(X=Pile) log(P(X=Pile)) + P(X=Face) log(P(X=Face))]$$
                 <div>
                     <div>
@@ -580,35 +578,41 @@ val sameModel = NaiveBayesModel.load(sc, "myModelPath")
             </section>
             <section>
                 <h4>Gain en information</h4>
-                <img src="images/arbre.png" height="200px">
+                <div class="center"><img src="images/arbre.png" height="200px"></div>
                 <p>Comment mesurer la réduction d'incertitude ?</p>
-                <p>Information Gain $$IG = H_0 - (\frac{|T_{1,1}|}{|T_0|}H_{1,1} + \frac{|T_{1,2}|}{|T_0|}H_{1,2})$$</p>
-                <p>A chaque split, on teste toutes les features encore à disposition, et on sélectionne la feature permettant le gain en information le plus important</p>
+                <p><span class="bold">Information Gain</span> $$IG = H_0 - (\frac{|T_{1,1}|}{|T_0|}H_{1,1} + \frac{|T_{1,2}|}{|T_0|}H_{1,2})$$</p>
+                <p class="center"><span class="bold">A chaque split, on teste toutes les features encore à disposition, et on sélectionne la feature permettant le gain en information le plus important</span></p>
             </section>
         </section>
         <section>
             <h3>Random Forest</h3>
             <section>
-                <p>Instabilité des arbres de décision: Faible changement dans les données peut entraîner un arbre totalement différent.</p>
-                <p>Idée: Créer plusieurs arbres et rassembler les prédictions pour prendre une décision finale plus stable.</p>
-                <p>
-                    Principe:
+                <p><span class="bold">Instabilité des arbres de décision :</span> Faible changement dans les données peut entraîner un arbre totalement différent.</p>
+                <p><span class="bold">Idée : </span>Créer plusieurs arbres et rassembler les prédictions pour prendre une décision finale plus stable.</p>
+                <p><span class="bold">Principe:</span>
                 <ul>
                     <li>Chaque arbre est construit à partir de tirages avec replacement de l'ensemble d'apprentissage -> Ajout d'aléatoire dans les données</li>
                     <li>Pour chaque split de chaque arbre: Choix de la meilleure feature à partir d'un sous-ensemble des features à disposition -> Ajout d'aléatoire dans le choix des features</li>
                 </ul>
                 </p>
-                <p>Conclusion: Moins interprétable (perte de la structure hiérarchique) mais gain en stabilité et robustessen</p>
+                <p><span class="bold">Conclusion :</span> Moins interprétable (perte de la structure hiérarchique) mais gain en stabilité et robustessen</p>
             </section>
-            <section>
+            <section id="random-forest-prediction">
                 <h4>Prédiction</h4>
-                <p>Prediction de la classe d'une nouvelle donnée</p>
+                <p><span class="bold">Prediction de la classe d'une nouvelle donnée</span></p>
                 Pour chaque arbre, on descend noeud par noeud en suivant les règles apprises, jusqu'à obtenir la classe prédite.<br/>
                 Pour B arbres, on a alors:
-                <p class="offset-left">$$\tilde{y_b}(x)$$ Prédiction pour l'arbre b</p>
-                <p class="offset-left">$$C_k(x)$$ Le nombre d'arbres pour lesquels la classe prédite est k</p>
+                <p class="offset-left">
+                    <div style="display: inline-block;width: 200px">$$\tilde{y_b}(x)$$</div> Prédiction pour l'arbre b
+                </p>
+                <p class="offset-left" style="margin-top: 40px">
+                    <div style="display: inline-block;width: 200px">$$C_k(x)$$</div> Le nombre d'arbres pour lesquels la classe prédite est k</p>
                 <p>$$C_k(x) = \sum_{b=1}^{B}{I(\tilde{y_b}(x) = k)}$$</p>
-                <p>La prédiction finale est alors: $$\tilde{y}(x) = argmax_k(C_k(x))$$</p>
+                <br/>
+                <p>
+                    La prédiction finale est alors :
+                    <span style="display: inline-block;margin-left: 20px;">$$\tilde{y}(x) = argmax_k(C_k(x))$$</span>
+                </p>
             </section>
         </section>
     </div>
@@ -632,7 +636,7 @@ val sameModel = NaiveBayesModel.load(sc, "myModelPath")
         progress: true,
         history: true,
         center: true,
-
+        backgroundTransition:'slide',
         transition: 'slide', // none/fade/slide/convex/concave/zoom,
 
         math: {

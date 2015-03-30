@@ -380,6 +380,14 @@ body {
     margin: 40px 0;
 }
 
+#random-forest-prediction.offset-left{
+    padding-left: 2em;
+}
+
+span.bold{
+    font-weight: bold;
+}
+
 .reveal .slides > section, .reveal .slides > section > section {
     display: none;
     position: absolute;
