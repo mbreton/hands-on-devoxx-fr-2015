@@ -543,18 +543,28 @@ val sameModel = NaiveBayesModel.load(sc, "myModelPath")
         <section>
             <h3>Arbres de décision</h3>
             <section>
-                <h4>Une démarche courante</h4>
                 <div class="half">
-                    <p><span class="bold">Algorithme récursif :</span> A chaque étape, on split le jeu
-                        de données en se basant sur le test d'une feature.
-                    </p>
-                    <p><span class="bold">Choix de la feature :</span> Celle qui réduit le plus notre incertitude sur la classification.
-                    </p>
-                    <p><span class="bold">Exemple :</span> Savoir si un enfant peut oui ou non aller jouer dehors avec son ami.
-                    </p>
+                    <img src="images/tableau.png">
                 </div>
                 <div class="half">
-                    <img src="images/arbre2.png">
+                    <img src="images/DecisionTree.png">
+                </div>
+                <div>
+                    <p>
+                        <span class="bold">Règles de Décision :</span>
+                    </p>
+                    <p>
+                        <span class="bold">If</span> Outlook=Sunny <span class="bold">and</span> Humidity=Normal <span class="bold">then</span> Yes
+                    </p>
+                    <p>
+                        <span class="bold">If</span> Outlook=Sunny <span class="bold">and</span> Humidity=High <span class="bold">then</span> No
+                    </p>
+                    <p>
+                        <span class="bold">If</span> Outlook=Rainy <span class="bold">and</span> Windy=True <span class="bold">then</span> Yes
+                    </p>
+                    <p>
+                        <span class="bold">If</span> Outlook=Rainy <span class="bold">and</span> Windy=False <span class="bold">then</span> No
+                    </p>
                 </div>
             </section>
             <section>
@@ -582,6 +592,29 @@ val sameModel = NaiveBayesModel.load(sc, "myModelPath")
                 <p>Comment mesurer la réduction d'incertitude ?</p>
                 <p><span class="bold">Information Gain</span> $$IG = H_0 - (\frac{|T_{1,1}|}{|T_0|}H_{1,1} + \frac{|T_{1,2}|}{|T_0|}H_{1,2})$$</p>
                 <p class="center"><span class="bold">A chaque split, on teste toutes les features encore à disposition, et on sélectionne la feature permettant le gain en information le plus important</span></p>
+            </section>
+            <section>
+                <h4>Exemple</h4>
+                <div class="half">
+                    <img src="images/outlook.png">
+                </div>
+                <div class="half">
+                    <img src="images/tableau4.png" class="fragment">
+                </div>
+                <div>
+                    <p>
+                        $$H_{0} = - \frac{5}{10}log(\frac{5}{10}) - \frac{5}{10}log(\frac{5}{10}) = 1$$
+                    </p>
+                    <p>
+                        $$H_{1,1} = - \frac{2}{5}log(\frac{2}{5}) - \frac{3}{5}log(\frac{3}{5}) = 0.97$$
+                    </p>
+                    <p>
+                        $$H_{1,2} = - \frac{2}{5}log(\frac{2}{5}) - \frac{3}{5}log(\frac{3}{5}) = 0.97$$
+                    </p>
+                    <p>
+                        $$IG_{Outlook} = H_{0} -  (\frac{5}{10} * H_{1,1} + \frac{5}{10} * H_{1,2}) = 0.03$$
+                    </p>
+                </div>
             </section>
         </section>
         <section>
@@ -631,7 +664,7 @@ val sameModel = NaiveBayesModel.load(sc, "myModelPath")
                         <span class="bold">holiday</span> : Vacances (binaire)
                     </p>
                     <p>
-                        <span class="bold">weather_{1,2,3,4}</span> : Catégorie de temps (binaire)
+                        <span class="bold">weather_{1,2,3}</span> : Catégorie de temps (binaire)
                     </p>
                     <p>
                         <span class="bold">temperature</span> : Température moyenne (entre 0 et 1) 
