@@ -2,7 +2,8 @@ import sqlContext.implicits._
 import org.apache.spark.rdd.RDD
 
 val sqlContext = new org.apache.spark.sql.SQLContext(sc)
-val textFile = sc.textFile("/Users/albanphelip/Documents/Xebia/Devoxx-2015/hands-on-devoxx-fr-2015/source/bike_train.csv")
+// Changer le chemin du fichier
+val textFile = sc.textFile("./hands-on-devoxx-fr-2015/source/bike_train.csv")
 
 def extractHeader(rdd: RDD[String]): (String, RDD[String]) = {
    val schema = rdd.first()
