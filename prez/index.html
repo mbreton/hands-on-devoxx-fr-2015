@@ -647,6 +647,27 @@ val sameModel = NaiveBayesModel.load(sc, "myModelPath")
                     </p>
                 </p>
             </section>
+            <section>
+            <h3>Les Vectors</h3>
+            <pre class="scala"><code class="hljs">
+// sc is an existing SparkContext.
+val sqlContext = new org.apache.spark.sql.SQLContext(sc)
+// this is used to implicitly convert an RDD to a DataFrame.
+import sqlContext.implicits._
+
+// Define the schema using a case class.
+case class Person(name: String, age: Int)
+
+// Create an RDD of Person objects and register it as a table.
+val people = sc.textFile("examples/src/main/resources/people.txt").map(_.split(",")).map(p => Person(p(0), p(1).trim.toInt)).toDF()
+people.registerTempTable("people")
+
+// Examples
+df.select("name").show()
+df.filter(df("name") > 21).show()
+df.groupBy("age").count().show()
+            </code></pre>
+        </section>
             <section id="data_frame_exploration">
                 <h4>Exploration des données</h4>
                 <p class="offset-left">
