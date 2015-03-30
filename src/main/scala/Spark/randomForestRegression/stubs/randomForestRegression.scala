@@ -29,6 +29,7 @@ object RandomForestRegression {
 
     // Model tuning
     // TODO 1 : Set the parameters of your choice to test randomForestTrainRegressor
+    // TODO 2 : Test different parameters to try to improve prediction results
     // TODO 4 : Modify gridSearchRandomForestRegressor in modelling/RandomForestObject to perform grid search
 
 
