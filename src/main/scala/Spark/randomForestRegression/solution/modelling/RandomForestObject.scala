@@ -59,8 +59,8 @@ object RandomForestObject {
            maxBins <- maxBinsGrid)
         yield {
 
-          val model = RandomForest.trainRegressor(trainSet, categoricalFeaturesInfo, numTrees, featuresSubsetStrategy,
-            impurity, maxDepth, maxBins)
+          val model = RandomForest.trainRegressor(trainSet, categoricalFeaturesInfo,
+            numTrees, featuresSubsetStrategy, impurity, maxDepth, maxBins)
 
           val accuracyVal = calculateRMSE(model, valSet)
 
@@ -74,7 +74,5 @@ object RandomForestObject {
     val maxBins = params._4
 
     (categoricalFeaturesInfo, numTrees, featuresSubsetStrategy, impurity, maxDepth, maxBins)
-
   }
-
 }

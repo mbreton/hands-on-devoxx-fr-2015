@@ -15,7 +15,8 @@ object Engineering {
     val targets = data.map(line => if (line.split("\t")(0) == SPAM) 1.0 else 0.0)
 
     // RDD of words in sms
-    val smsRDD: RDD[Seq[String]] = data.map(line => line.split("\t")(1)).map(_.split(" ").toSeq)
+    val smsRDD: RDD[Seq[String]] = data.map(line => line.split("\t")(1))
+      .map(_.split(" ").toSeq)
 
     // HashingTF
     val hashingTF = new HashingTF()

@@ -39,15 +39,13 @@ object Engineering {
         val weather = valuesNoDate.slice(6, 10).indexOf(1.0).toDouble
 
         // Put all final features into a dense Vector
-        val array = Array(dayOfWeek, month, year, season) ++ valuesNoDate.slice(4,6) ++ Array(weather) ++ valuesNoDate.slice(10, valuesNoDate.size-1)
+        val array = Array(dayOfWeek, month, year, season) ++ valuesNoDate.slice(4,6) ++
+          Array(weather) ++ valuesNoDate.slice(10, valuesNoDate.size-1)
         val featureVector = Vectors.dense(array)
         val label = valuesNoDate.last
 
         LabeledPoint(label, featureVector)
     }
-
     dataParsed
-
   }
-
 }

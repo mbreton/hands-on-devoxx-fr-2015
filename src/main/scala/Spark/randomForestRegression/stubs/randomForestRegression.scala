@@ -27,6 +27,7 @@ object RandomForestRegression {
     // TODO 1 : Split the dataset in a train, a validation and a test set (proportions 0.8, 0.1, 0.1) using the 'randomSplit' method
 
     // Model tuning
+    // val categoricalFeaturesInfo = Map(0 -> 4, 3 -> 4)
     // TODO 3 : Modify gridSearchRandomForestRegressor in modelling/RandomForestObject to perform grid search and return the best parameters
 
     // Modelling

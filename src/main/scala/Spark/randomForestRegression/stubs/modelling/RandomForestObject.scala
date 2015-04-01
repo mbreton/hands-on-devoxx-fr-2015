@@ -51,9 +51,9 @@ object RandomForestObject {
                                       maxDepthGrid: Array[Int] = Array(2),
                                       maxBinsGrid: Array[Int] = Array(4)) = {
 
-    // TODO 4 : Implement a grid search to find the best parameters and modify the result of the function
+    // TODO 3 : Implement a grid search to find the best parameters and modify the result of the function
 
-    // TODO 4 : Replace the following line with the best parameters found
+    // TODO 3 : Replace the following line with the best parameters found
     (categoricalFeaturesInfo, numTreesGrid(0), featuresSubsetStrategyGrid(0), impurity, maxDepthGrid(0), maxBinsGrid(0))
 
   }

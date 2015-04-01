@@ -45,12 +45,12 @@
         <section>
             <h2>Agenda</h2>
             <ol>
-                <li>Les bases du machine learning</li>
+                <li>Les bases du Machine Learning</li>
                 <li>TP Kmeans</li>
                 <li>TP Naive Bayes</li>
                 <li>- Break -</li>
                 <li>Présentation de Spark & MLlib</li>
-                <li>Naivge Bayes avec Spark</li>
+                <li>Naive Bayes avec Spark</li>
                 <li>Random Forest avec Spark</li>
             </ol>
             <aside class="notes">
@@ -249,6 +249,12 @@
                     données représentatives: est-ce que le ratio nb spam/nb ham est représentatif de ce que l’on retrouve dans la nature ? (vu le point de ce rapport)
                 </aside>
             </section>
+        </section>
+        <section>
+            <h2 class="alone">Spark & MLlib</h2>
+            <aside class="notes">
+                <!-- Put our comments her -->
+            </aside>
         </section>
         <section>
             <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1161394/logo_hadoop.png">
@@ -508,37 +514,106 @@ val neg = LabeledPoint(0.0, Vectors.sparse(3, Array(0, 2), Array(1.0, 3.0)))
             </code></pre>
         </section>
         <section>
-            <h3>Un exemple : le Naïve Bayes</h3>
-            <pre class="scala"><code class="hljs">
-import org.apache.spark.mllib.linalg.Vectors
-import org.apache.spark.mllib.regression.LabeledPoint
-import org.apache.spark.mllib.classification.{NaiveBayes, NaiveBayesModel}
-
-val data = sc.textFile("data/mllib/sample_naive_bayes_data.txt")
-
-val parsedData = data.map { line =>
-val parts = line.split(',')
-LabeledPoint(parts(0).toDouble, Vectors.dense(parts(1).split(' ').map(_.toDouble)))
-}
-            </code></pre>
+            <h2 style="text-align: right">Le Naïve Bayes en Spark</h2>
         </section>
         <section>
-            <h3>Un exemple&nbsp;: le Naïve Bayes</h3>
-            <pre class="scala"><code class=" hljs ">
-// Split data into training (60%) and test (40%).
-val Array(training, test) = parsedData.randomSplit(Array(0.6, 0.4), seed = 11L)
+            <h3>Le Naïve Bayes en Spark</h3>
+            <section>
+                <pre class="scala"><code class="hljs">
+    import org.apache.spark.mllib.linalg.Vectors
+    import org.apache.spark.mllib.regression.LabeledPoint
+    import org.apache.spark.mllib.classification.{NaiveBayes, NaiveBayesModel}
 
-// Model construction
-val model = NaiveBayes.train(training, lambda = 1.0)
+    val data = sc.textFile("data/mllib/sample_naive_bayes_data.txt")
 
-// Prediction
-val predictionAndLabel = test.map(p => (model.predict(p.features), p.label))
-val accuracy = 1.0 * predictionAndLabel.filter(x => x._1 == x._2).count() / test.count()
+    val parsedData = data.map { line =>
+    val parts = line.split(',')
+    LabeledPoint(parts(0).toDouble, Vectors.dense(parts(1).split(' ').map(_.toDouble)))
+    }
+                </code></pre>
+            </section>
+            <section>
+                <pre class="scala"><code class=" hljs ">
+    // Split data into training (60%) and test (40%).
+    val Array(training, test) = parsedData.randomSplit(Array(0.6, 0.4), seed = 11L)
 
-// Save and load model
-model.save(sc, "myModelPath")
-val sameModel = NaiveBayesModel.load(sc, "myModelPath")
-            </code></pre>
+    // Model construction
+    val model = NaiveBayes.train(training, lambda = 1.0)
+
+    // Prediction
+    val predictionAndLabel = test.map(p => (model.predict(p.features), p.label))
+    val accuracy = 1.0 * predictionAndLabel.filter(x => x._1 == x._2).count() / test.count()
+
+    // Save and load model
+    model.save(sc, "myModelPath")
+    val sameModel = NaiveBayesModel.load(sc, "myModelPath")
+                </code></pre>
+            </section>
+            <section>
+                <h2>Implémentation</h2>
+            </section>
+            <section>
+                <h4>Présentation des packages</h4>
+                <div class="half">
+                    <img src="images/organisation_projet.png">
+                </div>
+                <div class="half">
+                    <span class="bold">Deux packages:</span>
+                    <li>Solution</li>
+                    <li>Stubs -> Le package sur lequel travailler</li>
+
+                    <span class="bold">Composition des packages:</span>
+                    <li>features : Package pour le feature engineering. Préparation des features et création de nouvelles</li>
+                    <li>tools : Fonctions permettant le calcul de métriques ainsi que la transformation de certains rdds</li>
+                    <li>modelling (pour la partie Random Forest) : Fonctions relatives à la construction du modèle de prédiction</li>
+                    <li>main</li>
+                </div>
+            </section>
+            <section id="data_science_pipeline">
+                <h4>Démarche globale en Data Science</h4>
+                <p class="offset-left">
+                    <li>
+                        Step 1 : Chargement des données
+                    </li>
+                    <li>
+                        Step 2 : Feature Engineeging (Nettoyage, création et préparation des features)
+                    </li>
+                    <li>
+                        Step 3 : Splitting (train, validation et test sets)
+                    </li>
+                    <li>
+                        Step 4 : Tuning des paramètres (à la main ou grid search)
+                    </li>
+                    <li>
+                        Step 5 : Modelling sur train+validation set
+                    </li>
+                    <li>
+                        Step 6 : Prediction sur le test set
+                    </li>
+                </p>
+            </section>
+            <section>
+                <h4>Solution</h4>
+                <p>
+                    <div class="half">
+                        <img src="images/spark_naive_bayes_main.png">
+                    </div>
+                    <div class="half">
+                        <img src="images/spark_naive_bayes_engineering.png" class="fragment">
+                    </div>
+                </p>
+                <p>
+                    <div class="half">
+                        <img src="images/spark_naive_bayes_main2.png" class="fragment">
+                    </div>
+                    <div class="half">
+                        <img src="images/spark_naive_bayes_utilities.png" class="fragment">
+                    </div>
+                </p>
+            </section>
+        </section>
+        <section>
+            <h2 style="text-align: right">Random Forest en Spark</h2>
         </section>
         <section>
             <h3>Arbres de décision</h3>
@@ -613,7 +688,7 @@ val sameModel = NaiveBayesModel.load(sc, "myModelPath")
                     </p>
                 </div>
                 <div class="center">
-                    <img src="images/tableau4.png" class="fragment">
+                    <img src="images/tableau4.png" style="width: 40%; height: 40%" class="fragment">
                 </div>
             </section>
         </section>
@@ -639,55 +714,59 @@ val sameModel = NaiveBayesModel.load(sc, "myModelPath")
             <h3>Mise en pratique</h3>
             <section id="bike-demand-prediction">
                 <h4>Prédiction de la demande de vélos</h4>
-                Features présentes dans le dataset bike_train.csv
-                <p class="offset-left">
-                    <p>
+                <p>
+                    Features présentes dans le dataset bike_train.csv
+                    <li>
                         <span class="bold">date</span> : La date au format "YYYY-MM-DD HH:MM:SS"
-                    </p>
-                    <p>
+                    </li>
+                    <li>
                         <span class="bold">season_{1,2,3,4}</span> : Saison (binaire)
-                    </p>
-                    <p>
+                    </li>
+                    <li>
                         <span class="bold">holiday</span> : Vacances (binaire)
-                    </p>
-                    <p>
+                    </li>
+                    <li>
                         <span class="bold">weather_{1,2,3}</span> : Catégorie de temps (binaire)
-                    </p>
-                    <p>
+                    </li>
+                    <li>
                         <span class="bold">temperature</span> : Température moyenne (entre 0 et 1) 
-                    </p>
-                    <p>
+                    </li>
+                    <li>
                         <span class="bold">humidity</span> : Humidité moyenne (entre 0 et 1)
-                    </p>
-                    <p>
+                    </li>
+                    <li>
                         <span class="bold">windspeed</span> : Vitesse moyenne du vent
-                    </p>
-                    <p>
+                    </li>
+                    <li>
                         <span class="bold">count</span> : La variable cible - Nombre de vélos loués pendant la journée
-                    </p>
+                    </li>
+                </p>
+                <p>
+                    Métrique utilisée : <span class="bold">Root Mean Square Error</span>
+                    $$RMSE = \sqrt{\frac{1}{N} \sum_{i=1}^{N} (\hat{y}_i - y_i)^2}$$
                 </p>
             </section>
             <section>
-            <h3>Les Data Frames</h3>
-            <pre class="scala"><code class="hljs">
-// sc is an existing SparkContext.
-val sqlContext = new org.apache.spark.sql.SQLContext(sc)
-// this is used to implicitly convert an RDD to a DataFrame.
-import sqlContext.implicits._
+                <h4>Les Data Frames</h4>
+                <pre class="scala"><code class="hljs">
+    // sc is an existing SparkContext.
+    val sqlContext = new org.apache.spark.sql.SQLContext(sc)
+    // this is used to implicitly convert an RDD to a DataFrame.
+    import sqlContext.implicits._
 
-// Define the schema using a case class.
-case class Person(name: String, age: Int)
+    // Define the schema using a case class.
+    case class Person(name: String, age: Int)
 
-// Create an RDD of Person objects and register it as a table.
-val people = sc.textFile("examples/src/main/resources/people.txt").map(_.split(",")).map(p => Person(p(0), p(1).trim.toInt)).toDF()
-people.registerTempTable("people")
+    // Create an RDD of Person objects and register it as a table.
+    val people = sc.textFile("examples/src/main/resources/people.txt").map(_.split(",")).map(p => Person(p(0), p(1).trim.toInt)).toDF()
+    people.registerTempTable("people")
 
-// Examples
-df.select("name").show()
-df.filter(df("name") > 21).show()
-df.groupBy("age").count().show()
-            </code></pre>
-        </section>
+    // Examples
+    df.select("name").show()
+    df.filter(df("name") > 21).show()
+    df.groupBy("age").count().show()
+                </code></pre>
+            </section>
             <section id="data_frame_exploration">
                 <h4>Exploration des données</h4>
                 <p class="offset-left">
@@ -705,28 +784,14 @@ df.groupBy("age").count().show()
                     </li>
                 </p>
             </section>
-            <section id="data_science_pipeline">
-                <h4>Démarche globale en Data Science</h4>
-                <p class="offset-left">
-                    <li>
-                        Step 1 : Chargement des données
-                    </li>
-                    <li>
-                        Step 2 : Feature Engineeging (Nettoyage, création et préparation des features)
-                    </li>
-                    <li>
-                        Step 3 : Splitting (train, validation et test sets)
-                    </li>
-                    <li>
-                        Step 4 : Tuning des paramètres (à la main ou grid search)
-                    </li>
-                    <li>
-                        Step 5 : Modelling sur train+validation set
-                    </li>
-                    <li>
-                        Step 6 : Prediction sur le test set
-                    </li>
-                </p>
+            <section>
+                <h2>Implémentation</h2>
+            </section>
+            <section>
+                <h4>Etapes d'implémentation</h4>
+                <p><span class="bold">TODO 1</span> : Préparer les données (sauf les dates) et implémenter un Random Forest sur des paramètres choisis à la main</p>
+                <p><span class="bold">TODO 2</span> : Créer de nouvelles features provenant de la date et observer l'amélioration des résultats de prédicion (baisse du RMSE)</p>
+                <p><span class="bold">TODO 3</span> : Implémenter un Grid Search pour trouver les meilleurs paramètres du Random Forest et observer l'amélioration des résultats de prédiction</p>
             </section>
             <section id="grid_search">
                 <h4>Le Grid Search</h4>
@@ -748,6 +813,35 @@ df.groupBy("age").count().show()
                     </p>
                 </p>
             </section>
+            <section>
+                <h4>Solution</h4>
+                <p>
+                    <div class="half">
+                        <img src="images/spark_random_forest_main.png">
+                    </div>
+                    <div class="half">
+                        <img src="images/spark_random_forest_engineering.png" class="fragment">
+                    </div>
+                </p>
+            </section>
+            <section>
+                <h4>Solution</h4>
+                <p>
+                    <div class="half">
+                        <img src="images/spark_random_forest_main2.png">
+                    </div>
+                    <div class="half">
+                        <img src="images/spark_random_forest_gridSearch.png" class="fragment">
+                        <img src="images/spark_random_forest_utilities.png" class="fragment">
+                    </div>
+                </p>
+            </section>
+        </section>
+        <section class="back-page" data-background-image="images/bg.png">
+            <h1>Merci</h1>
+            <aside class="notes">
+                <!-- Put our comments her -->
+            </aside>
         </section>
     </div>
     <div class="footer">

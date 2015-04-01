@@ -10,7 +10,10 @@ object randomForestRegression {
   def main(args: Array[String]): Unit = {
 
     // Setup Spark Configurations
-    val conf = new SparkConf().setAppName("Bike_Demand_Prediction").setMaster("local[4]").set("spark.executor.memory", "6g")
+    val conf = new SparkConf()
+      .setAppName("Bike_Demand_Prediction")
+      .setMaster("local[4]")
+      .set("spark.executor.memory", "6g")
     val sc = new SparkContext(conf)
 
     // Loading Data
@@ -49,6 +52,4 @@ object randomForestRegression {
     println(s"Test Error: $rmseTest")
 
   }
-
-
 }

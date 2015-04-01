@@ -34,7 +34,7 @@ object Engineering {
 
         // Put all final features into a dense Vector
         // TODO 1 : Put all features into an array and convert it to Vectors
-        // TODO 3 : Add date features to the array of features
+        // TODO 2 : Add date features to the array of features
         //val array = Array(season) ++ valuesNoDate.slice(4,6) ++ Array(weather) ++ valuesNoDate.slice(10, valuesNoDate.size-1)
         //val featureVector = Vectors.dense(array)
 
