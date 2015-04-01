@@ -11,10 +11,7 @@ object NaiveBayesClassification {
   def main(args: Array[String]): Unit = {
 
     // Setup Spark configurations
-    val conf = new SparkConf()
-      .setAppName("SMS_Spam_Classification")
-      .setMaster("local[4]")
-      .set("spark.executor.memory", "6g")
+    val conf = new SparkConf().setAppName("SMS_Spam_Classification").setMaster("local[4]").set("spark.executor.memory", "6g")
     val sc = new SparkContext(conf)
 
     // Loading Data
@@ -47,14 +44,3 @@ object NaiveBayesClassification {
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-

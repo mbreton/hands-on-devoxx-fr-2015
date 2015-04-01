@@ -29,7 +29,5 @@ object Engineering {
 
     // Zip targets and features and convert to LabeledPoint
     targets.zip(tfidf).map(l => LabeledPoint(l._1, l._2))
-
   }
-
 }

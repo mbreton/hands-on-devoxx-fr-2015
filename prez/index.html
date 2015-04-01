@@ -593,23 +593,74 @@ val neg = LabeledPoint(0.0, Vectors.sparse(3, Array(0, 2), Array(1.0, 3.0)))
                 </p>
             </section>
             <section>
-                <h4>Solution</h4>
-                <p>
-                    <div class="half">
-                        <img src="images/spark_naive_bayes_main.png">
-                    </div>
-                    <div class="half">
-                        <img src="images/spark_naive_bayes_engineering.png" class="fragment">
-                    </div>
-                </p>
-                <p>
-                    <div class="half">
-                        <img src="images/spark_naive_bayes_main2.png" class="fragment">
-                    </div>
-                    <div class="half">
-                        <img src="images/spark_naive_bayes_utilities.png" class="fragment">
-                    </div>
-                </p>
+                <h4>Solution : Main</h4>
+                <pre class="scala"><code class=" hljs ">
+// Loading Data
+val data = sc.textFile("./source/sms_train.csv")
+
+// Parsing & Feature Engineering
+val dataParsed = featureEngineering(data)
+
+// Splitting
+val Array(trainSet, testSet) = dataParsed.randomSplit(Array(0.75, 0.25))
+trainSet.cache()
+
+// Modelling
+val model = NaiveBayes.train(trainSet, lambda = 1.0)
+
+// Evaluation
+val trainMetrics: MulticlassMetrics = getMetrics(model, trainSet)
+val testMetrics: MulticlassMetrics = getMetrics(model, testSet)
+
+val accuracyTrain = trainMetrics.precision
+val confusionTrain = trainMetrics.confusionMatrix
+val accuracyTest = testMetrics.precision
+val confusionTest = testMetrics.confusionMatrix
+
+// Print results
+println(s"Train Error: $accuracyTrain")
+println(s"Confusion Matrix on training set: \n $confusionTrain")
+println(s"Test Error: $accuracyTest")
+println(s"Confusion Matrix on test set: \n $confusionTest")
+                </code></pre>
+            </section>
+            <section>
+                <h4>Solution : Feature Engineering</h4>
+                <pre class="scala"><code class=" hljs ">
+val SPAM = "spam"
+
+def featureEngineering(data : RDD[String]): RDD[LabeledPoint] = {
+
+    val targets = data.map(line => if (line.split("\t")(0) == SPAM) 1.0 else 0.0)
+
+    // RDD of words in sms
+    val smsRDD: RDD[Seq[String]] = data.map(line => line.split("\t")(1))
+      .map(_.split(" ").toSeq)
+
+    // HashingTF
+    val hashingTF = new HashingTF()
+    val tf: RDD[Vector] = hashingTF.transform(smsRDD)
+    tf.cache()
+
+    // TF-IDF
+    val idf = new IDF().fit(tf)
+    val tfidf: RDD[Vector] = idf.transform(tf)
+
+    // Zip targets and features and convert to LabeledPoint
+    targets.zip(tfidf).map(l => LabeledPoint(l._1, l._2))
+}
+                </code></pre>
+            </section>
+            <section>
+                <h4>Solution : Metrics</h4>
+                <pre class="scala"><code class=" hljs ">
+def getMetrics(model: NaiveBayesModel, data: RDD[LabeledPoint]): MulticlassMetrics = {
+
+    val predictionsAndLabels = data.map(example => (model.predict(example.features), example.label))
+
+    new MulticlassMetrics(predictionsAndLabels)
+}
+                </code></pre>
             </section>
         </section>
         <section>
@@ -793,8 +844,149 @@ val neg = LabeledPoint(0.0, Vectors.sparse(3, Array(0, 2), Array(1.0, 3.0)))
                 <p><span class="bold">TODO 2</span> : Créer de nouvelles features provenant de la date et observer l'amélioration des résultats de prédicion (baisse du RMSE)</p>
                 <p><span class="bold">TODO 3</span> : Implémenter un Grid Search pour trouver les meilleurs paramètres du Random Forest et observer l'amélioration des résultats de prédiction</p>
             </section>
+            <section>
+                <h4>Solution TODO 1: Main</h4>
+                <pre class="scala"><code class="hljs">
+// Loading Data
+val data = sc.textFile("./source/bike_train.csv")
+
+// Parsing Data & Feature Engineering
+val schemaData = extractHeader(data)
+val dataParsed = featureEngineering(schemaData._2)
+
+// Splitting
+val Array(trainSet, valSet, testSet) = dataParsed.randomSplit(Array(0.8, 0.1, 0.1))
+trainSet.cache()
+valSet.cache()
+
+// Modelling
+val dataTrain = sc.union(trainSet, valSet)
+val categoricalFeaturesInfo = Map(0 -> 4, 3 -> 4)
+val model = randomForestTrainRegressor(categoricalFeaturesInfo=categoricalFeaturesInfo,
+  numTrees = 10, maxDepth = 20, maxBins = 30)(dataTrain)
+
+// Evaluation
+val rmseTrain = calculateRMSE(model, dataTrain)
+val rmseTest = calculateRMSE(model, testSet)
+
+// Show Evaluation results
+println(s"Train Error: $rmseTrain")
+println(s"Test Error: $rmseTest")
+                </code></pre>
+            </section>
+            <section>
+                <h4>Solution TODO 1: Feature Engineering</h4>
+                <pre class="scala"><code class="hljs">
+def featureEngineering(rdd: RDD[String]): RDD[LabeledPoint] = {
+
+    val dataParsed = rdd.map {
+      line =>
+
+        val values = line.split(',')
+
+        // Convert all features but date to double
+        val valuesNoDate = values.slice(1,values.size).map(_.toDouble)
+
+        // Convert all season categories into one categorical feature
+        val season = valuesNoDate.slice(0, 4).indexOf(1.0).toDouble
+
+        // Convert all weather categories into one categorical feature
+        val weather = valuesNoDate.slice(6, 10).indexOf(1.0).toDouble
+
+        // Put all final features into a dense Vector
+        val array = Array(season) ++ valuesNoDate.slice(4,6) ++
+          Array(weather) ++ valuesNoDate.slice(10, valuesNoDate.size-1)
+        val featureVector = Vectors.dense(array)
+        val label = valuesNoDate.last
+
+        LabeledPoint(label, featureVector)
+    }
+    dataParsed
+}
+                </code></pre>
+            </section>
+            <section>
+                <h4>Solution TODO 1: Metrics</h4>
+                <pre class="scala"><code class="hljs">
+def calculateRMSE(model: RandomForestModel, data: RDD[LabeledPoint]): Double = {
+
+    val predictionsAndLabels = data.map(example => (model.predict(example.features), example.label))
+
+    math.sqrt(predictionsAndLabels.map{case(v,p) => math.pow((v - p), 2)}.mean())
+}
+                </code></pre>
+            </section>
+            <section>
+                <h4>Solution TODO 2: Main</h4>
+                <pre class="scala"><code class="hljs">
+// Loading Data
+val data = sc.textFile("./source/bike_train.csv")
+
+// Parsing Data & Feature Engineering
+val schemaData = extractHeader(data)
+val dataParsed = featureEngineering(schemaData._2)
+
+// Splitting
+val Array(trainSet, valSet, testSet) = dataParsed.randomSplit(Array(0.8, 0.1, 0.1))
+trainSet.cache()
+valSet.cache()
+
+// Modelling
+val dataTrain = sc.union(trainSet, valSet)
+val categoricalFeaturesInfo = Map(0 -> 7, 1 -> 12, 3 -> 4, 6 -> 4)
+val model = randomForestTrainRegressor(categoricalFeaturesInfo=categoricalFeaturesInfo,
+  numTrees = 10, maxDepth = 20, maxBins = 30)(dataTrain)
+
+// Evaluation
+val rmseTrain = calculateRMSE(model, dataTrain)
+val rmseTest = calculateRMSE(model, testSet)
+
+// Show Evaluation results
+println(s"Train Error: $rmseTrain")
+println(s"Test Error: $rmseTest")
+                </code></pre>
+            </section>
+            <section>
+                <h4>Solution TODO 2: Feature Engineering</h4>
+                <pre class="scala"><code class="hljs">
+def featureEngineering(rdd: RDD[String]): RDD[LabeledPoint] = {
+
+    val dataParsed = rdd.map {
+      line =>
+
+        val values = line.split(',')
+
+        // Create features from dates
+        val dateString = values(0).split(" ")(0)
+        val date = new DateTime(dateString)
+
+        val dayOfWeek = date.dayOfWeek().get() - 1
+        val month = date.monthOfYear().get() - 1
+        val year = date.year().get()
+
+        // Convert all features but date to double
+        val valuesNoDate = values.slice(1,values.size).map(_.toDouble)
+
+        // Convert all season categories into one categorical feature
+        val season = valuesNoDate.slice(0, 4).indexOf(1.0).toDouble
+
+        // Convert all weather categories into one categorical feature
+        val weather = valuesNoDate.slice(6, 10).indexOf(1.0).toDouble
+
+        // Put all final features into a dense Vector
+        val array = Array(dayOfWeek, month, year, season) ++ valuesNoDate.slice(4,6) ++
+          Array(weather) ++ valuesNoDate.slice(10, valuesNoDate.size-1)
+        val featureVector = Vectors.dense(array)
+        val label = valuesNoDate.last
+
+        LabeledPoint(label, featureVector)
+    }
+    dataParsed
+}
+                </code></pre>
+            </section>
             <section id="grid_search">
-                <h4>Le Grid Search</h4>
+                <h4>TODO 3 : Grid Search</h4>
                 <p class="offset-left">
                     <p>
                         <span class="bold">Objectif</span> : Tester, pour chaque paramètre, plusieurs possibilités
@@ -814,27 +1006,81 @@ val neg = LabeledPoint(0.0, Vectors.sparse(3, Array(0, 2), Array(1.0, 3.0)))
                 </p>
             </section>
             <section>
-                <h4>Solution</h4>
-                <p>
-                    <div class="half">
-                        <img src="images/spark_random_forest_main.png">
-                    </div>
-                    <div class="half">
-                        <img src="images/spark_random_forest_engineering.png" class="fragment">
-                    </div>
-                </p>
+                <h4>Solution TODO 3 : Main</h4>
+                <pre class="scala"><code class="hljs">
+// Loading Data
+val data = sc.textFile("./source/bike_train.csv")
+
+// Parsing Data & Feature Engineering
+val schemaData = extractHeader(data)
+val dataParsed = featureEngineering(schemaData._2)
+
+// Splitting
+val Array(trainSet, valSet, testSet) = dataParsed.randomSplit(Array(0.8, 0.1, 0.1))
+trainSet.cache()
+valSet.cache()
+
+// Model tuning
+val categoricalFeaturesInfo = Map(0 -> 7, 1 -> 12, 3 -> 4, 6 -> 4)
+val numTreesGrid = Array(500, 1000)
+val maxDepthGrid = Array(20, 25, 30)
+val maxBinsGrid = Array(50, 100, 200)
+val bestParams = gridSearchRandomForestRegressor(trainSet, valSet,
+  categoricalFeaturesInfo = categoricalFeaturesInfo, maxDepthGrid = maxDepthGrid,
+  maxBinsGrid = maxBinsGrid, numTreesGrid = numTreesGrid)
+
+// Modelling
+val dataTrain = sc.union(trainSet, valSet)
+val model = (randomForestTrainRegressor _).tupled(bestParams)(dataTrain)
+
+// Evaluation
+val rmseTrain = calculateRMSE(model, dataTrain)
+val rmseTest = calculateRMSE(model, testSet)
+
+
+// Show Evaluation results
+println(s"Best Parameters: ${bestParams}")
+println(s"Train Error: $rmseTrain")
+println(s"Test Error: $rmseTest")
+                </code></pre>
             </section>
             <section>
-                <h4>Solution</h4>
-                <p>
-                    <div class="half">
-                        <img src="images/spark_random_forest_main2.png">
-                    </div>
-                    <div class="half">
-                        <img src="images/spark_random_forest_gridSearch.png" class="fragment">
-                        <img src="images/spark_random_forest_utilities.png" class="fragment">
-                    </div>
-                </p>
+                <h4>Solution TODO 3 : Modelling</h4>
+                <pre class="scala"><code class="hljs">
+def gridSearchRandomForestRegressor(trainSet: RDD[LabeledPoint],
+                                      valSet: RDD[LabeledPoint],
+                                      categoricalFeaturesInfo: Map[Int, Int] = Map[Int, Int](),
+                                      numTreesGrid: Array[Int] = Array(10),
+                                      featuresSubsetStrategyGrid: Array[String] = Array("auto"),
+                                      impurity: String = "variance",
+                                      maxDepthGrid: Array[Int] = Array(2),
+                                      maxBinsGrid: Array[Int] = Array(4)) = {
+
+    val gridSearch =
+
+      for (numTrees <- numTreesGrid;
+           featuresSubsetStrategy <- featuresSubsetStrategyGrid;
+           maxDepth <- maxDepthGrid;
+           maxBins <- maxBinsGrid)
+        yield {
+
+          val model = RandomForest.trainRegressor(trainSet, categoricalFeaturesInfo,
+            numTrees, featuresSubsetStrategy, impurity, maxDepth, maxBins)
+
+          val accuracyVal = calculateRMSE(model, valSet)
+
+          ((numTrees, featuresSubsetStrategy, maxDepth, maxBins), accuracyVal)
+        }
+
+    val params = gridSearch.sortBy(_._2).take(1)(0)._1
+    val numTrees = params._1
+    val featuresSubsetStrategy = params._2
+    val maxDepth = params._3
+    val maxBins = params._4
+
+    (categoricalFeaturesInfo, numTrees, featuresSubsetStrategy, impurity, maxDepth, maxBins)
+}
+                </code></pre>
             </section>
         </section>
         <section class="back-page" data-background-image="images/bg.png">
