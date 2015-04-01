@@ -463,8 +463,9 @@ import org.apache.sparkContext._
 
 object wordCount {
   def main(args: Array[String]): Unit = {
+    val conf = new SparkConf().setAppName("WordCount").setMaster("local[4]")
+    val sc = new SparkContext(conf)
     val textFile = sc.textFile("README.md")
-
     val count = textFile.flatMap(line => line.split(" "))
         .map(word => (word, 1))
         .reduceByKey(_+_)
