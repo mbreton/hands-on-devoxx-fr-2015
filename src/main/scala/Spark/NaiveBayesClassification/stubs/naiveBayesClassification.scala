@@ -33,7 +33,8 @@ object NaiveBayesClassification {
     // TODO : Call the precision and confusionMatrix parameters to know the classification accuracy
     // TODO : Do the same for the train set for comparison
 
-    // Print results
+    // TODO : print results
+
 
   }
 
