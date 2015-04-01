@@ -10,7 +10,7 @@ object Utilities {
   /**
    * Extract header of a dataset
    * @param rdd A RDD with a header inside
-   * @return A tuple2. First element of the tuple is the header. Second element is the data.
+   * @return a tuple. First element of the tuple is the header. Second element is the data.
    */
   def extractHeader(rdd: RDD[String]): (String, RDD[String]) = {
 
@@ -35,11 +35,19 @@ object Utilities {
    * @param data A RDD of LabeledPoint to be tested
    * @return The RMSE
    */
-  def calculateRMSE(model: RandomForestModel, data: RDD[LabeledPoint]): Double = {
-
+  def getRMSE(model: RandomForestModel, data: RDD[LabeledPoint]): Double = {
     val predictionsAndLabels = data.map(example => (model.predict(example.features), example.label))
+    calculateRMSE(predictionsAndLabels)
+  }
 
-    // TODO 1 : Calculate the RMSE and change return
+  /**
+   * Compute the RMSE from the prediction and the labels
+   * @param rdd A RDD with the prediction and the labels
+   * @return The RMSE
+   */
+  def calculateRMSE(rdd: RDD[(Double, Double)]): Double ={
+    // TODO 1 : Calculate the RMSE and return the result. There is a Unit test to check your implementation.
+
     0d
   }
 

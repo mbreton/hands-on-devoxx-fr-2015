@@ -21,11 +21,12 @@ object Engineering {
 
         val values = line.split(',')
 
+        // TODO 2 : Create new features from dateString (joda time is in the build.sbt)
         val dateString = values(0).split(" ")(0)
-        // TODO 3 : Create features from dates
+        val date = new DateTime(dateString)
 
         // Convert all features but date to double
-        val valuesNoDate = values.slice(1,values.size).map(_.toDouble)
+        val valuesNoDate = values.slice(1,values.length).map(_.toDouble)
 
         // Convert all season categories into one categorical feature
         val season = valuesNoDate.slice(0, 4).indexOf(1.0).toDouble
@@ -40,7 +41,7 @@ object Engineering {
 
         val label = valuesNoDate.last
 
-        // TODO 1 : Change LabeledPoint
+        // TODO 1 : Return proper LabeledPoint
         LabeledPoint(0, Vectors.dense(Array(0d)))
     }
 

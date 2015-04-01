@@ -458,13 +458,21 @@ println(tuple._2) // Affiche 3
         <section>
             <h3>WordCount</h3>
             <pre class="scala"><code class="hljs">
-val textFile = sc.textFile("README.md")
+import org.apache.sparkContext
+import org.apache.sparkContext._
 
-val count = textFile.flatMap(line => line.split(" "))
-.map(word => (word, 1))
-.reduce(_+_)
+object wordCount {
+  def main(args: Array[String]): Unit = {
+    val textFile = sc.textFile("README.md")
 
-textFile.saveAsTextFile("/path/to/file")
+    val count = textFile.flatMap(line => line.split(" "))
+        .map(word => (word, 1))
+        .reduceByKey(_+_)
+
+    count.saveAsTextFile("/path/to/file")
+  }
+}
+
             </code></pre>
         </section>
         <section data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1165437/machine-learning.jpg">

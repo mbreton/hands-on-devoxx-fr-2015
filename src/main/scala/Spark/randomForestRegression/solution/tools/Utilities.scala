@@ -35,11 +35,19 @@ object Utilities {
    * @param data A RDD of LabeledPoint to be tested
    * @return The RMSE
    */
-  def calculateRMSE(model: RandomForestModel, data: RDD[LabeledPoint]): Double = {
+  def getRMSE(model: RandomForestModel, data: RDD[LabeledPoint]): Double = {
 
     val predictionsAndLabels = data.map(example => (model.predict(example.features), example.label))
+    calculateRMSE(predictionsAndLabels)
+  }
 
-    math.sqrt(predictionsAndLabels.map{case(v,p) => math.pow((v - p), 2)}.mean())
+  /**
+   * Compute the RMSE from the prediction and the labels
+   * @param rdd A RDD with the prediction and the labels
+   * @return The RMSE
+   */
+  def calculateRMSE(rdd: RDD[(Double, Double)]): Double ={
+    math.sqrt(rdd.map{case(v,p) => math.pow(v - p, 2)}.mean())
   }
 
 }

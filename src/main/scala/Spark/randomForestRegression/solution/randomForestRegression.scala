@@ -2,7 +2,7 @@ package spark.randomForestRegression.solution
 
 import spark.randomForestRegression.solution.features.Engineering.featureEngineering
 import org.apache.spark.{SparkContext, SparkConf}
-import spark.randomForestRegression.solution.tools.Utilities.{extractHeader, calculateRMSE}
+import spark.randomForestRegression.solution.tools.Utilities.{extractHeader, getRMSE}
 import spark.randomForestRegression.solution.modelling.RandomForestObject.{randomForestTrainRegressor, gridSearchRandomForestRegressor}
 
 object randomForestRegression {
@@ -39,12 +39,12 @@ object randomForestRegression {
     val model = (randomForestTrainRegressor _).tupled(bestParams)(dataTrain)
 
     // Evaluation
-    val rmseTrain = calculateRMSE(model, dataTrain)
-    val rmseTest = calculateRMSE(model, testSet)
+    val rmseTrain = getRMSE(model, dataTrain)
+    val rmseTest = getRMSE(model, testSet)
 
 
     // Show Evaluation results
-    println(s"Best Parameters: ${bestParams}")
+    println(s"Best Parameters: $bestParams")
     println(s"Train Error: $rmseTrain")
     println(s"Test Error: $rmseTest")
 
