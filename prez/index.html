@@ -917,36 +917,6 @@ def calculateRMSE(model: RandomForestModel, data: RDD[LabeledPoint]): Double = {
                 </code></pre>
             </section>
             <section>
-                <h4>Solution TODO 2: Main</h4>
-                <pre class="scala"><code class="hljs">
-// Loading Data
-val data = sc.textFile("./source/bike_train.csv")
-
-// Parsing Data & Feature Engineering
-val schemaData = extractHeader(data)
-val dataParsed = featureEngineering(schemaData._2)
-
-// Splitting
-val Array(trainSet, valSet, testSet) = dataParsed.randomSplit(Array(0.8, 0.1, 0.1))
-trainSet.cache()
-valSet.cache()
-
-// Modelling
-val dataTrain = sc.union(trainSet, valSet)
-val categoricalFeaturesInfo = Map(0 -> 7, 1 -> 12, 3 -> 4, 6 -> 4)
-val model = randomForestTrainRegressor(categoricalFeaturesInfo=categoricalFeaturesInfo,
-  numTrees = 10, maxDepth = 20, maxBins = 30)(dataTrain)
-
-// Evaluation
-val rmseTrain = calculateRMSE(model, dataTrain)
-val rmseTest = calculateRMSE(model, testSet)
-
-// Show Evaluation results
-println(s"Train Error: $rmseTrain")
-println(s"Test Error: $rmseTest")
-                </code></pre>
-            </section>
-            <section>
                 <h4>Solution TODO 2: Feature Engineering</h4>
                 <pre class="scala"><code class="hljs">
 def featureEngineering(rdd: RDD[String]): RDD[LabeledPoint] = {
@@ -985,6 +955,36 @@ def featureEngineering(rdd: RDD[String]): RDD[LabeledPoint] = {
 }
                 </code></pre>
             </section>
+            <section>
+                <h4>Solution TODO 2: Main</h4>
+                <pre class="scala"><code class="hljs">
+// Loading Data
+val data = sc.textFile("./source/bike_train.csv")
+
+// Parsing Data & Feature Engineering
+val schemaData = extractHeader(data)
+val dataParsed = featureEngineering(schemaData._2)
+
+// Splitting
+val Array(trainSet, valSet, testSet) = dataParsed.randomSplit(Array(0.8, 0.1, 0.1))
+trainSet.cache()
+valSet.cache()
+
+// Modelling
+val dataTrain = sc.union(trainSet, valSet)
+val categoricalFeaturesInfo = Map(0 -> 7, 1 -> 12, 3 -> 4, 6 -> 4)
+val model = randomForestTrainRegressor(categoricalFeaturesInfo=categoricalFeaturesInfo,
+  numTrees = 10, maxDepth = 20, maxBins = 30)(dataTrain)
+
+// Evaluation
+val rmseTrain = calculateRMSE(model, dataTrain)
+val rmseTest = calculateRMSE(model, testSet)
+
+// Show Evaluation results
+println(s"Train Error: $rmseTrain")
+println(s"Test Error: $rmseTest")
+                </code></pre>
+            </section>
             <section id="grid_search">
                 <h4>TODO 3 : Grid Search</h4>
                 <p class="offset-left">
@@ -1004,6 +1004,44 @@ def featureEngineering(rdd: RDD[String]): RDD[LabeledPoint] = {
                         </li>
                     </p>
                 </p>
+            </section>
+            <section>
+                <h4>Solution TODO 3 : Modelling</h4>
+                <pre class="scala"><code class="hljs">
+def gridSearchRandomForestRegressor(trainSet: RDD[LabeledPoint],
+                                      valSet: RDD[LabeledPoint],
+                                      categoricalFeaturesInfo: Map[Int, Int] = Map[Int, Int](),
+                                      numTreesGrid: Array[Int] = Array(10),
+                                      featuresSubsetStrategyGrid: Array[String] = Array("auto"),
+                                      impurity: String = "variance",
+                                      maxDepthGrid: Array[Int] = Array(2),
+                                      maxBinsGrid: Array[Int] = Array(4)) = {
+
+    val gridSearch =
+
+      for (numTrees <- numTreesGrid;
+           featuresSubsetStrategy <- featuresSubsetStrategyGrid;
+           maxDepth <- maxDepthGrid;
+           maxBins <- maxBinsGrid)
+        yield {
+
+          val model = RandomForest.trainRegressor(trainSet, categoricalFeaturesInfo,
+            numTrees, featuresSubsetStrategy, impurity, maxDepth, maxBins)
+
+          val accuracyVal = calculateRMSE(model, valSet)
+
+          ((numTrees, featuresSubsetStrategy, maxDepth, maxBins), accuracyVal)
+        }
+
+    val params = gridSearch.sortBy(_._2).take(1)(0)._1
+    val numTrees = params._1
+    val featuresSubsetStrategy = params._2
+    val maxDepth = params._3
+    val maxBins = params._4
+
+    (categoricalFeaturesInfo, numTrees, featuresSubsetStrategy, impurity, maxDepth, maxBins)
+}
+                </code></pre>
             </section>
             <section>
                 <h4>Solution TODO 3 : Main</h4>
@@ -1042,44 +1080,6 @@ val rmseTest = calculateRMSE(model, testSet)
 println(s"Best Parameters: ${bestParams}")
 println(s"Train Error: $rmseTrain")
 println(s"Test Error: $rmseTest")
-                </code></pre>
-            </section>
-            <section>
-                <h4>Solution TODO 3 : Modelling</h4>
-                <pre class="scala"><code class="hljs">
-def gridSearchRandomForestRegressor(trainSet: RDD[LabeledPoint],
-                                      valSet: RDD[LabeledPoint],
-                                      categoricalFeaturesInfo: Map[Int, Int] = Map[Int, Int](),
-                                      numTreesGrid: Array[Int] = Array(10),
-                                      featuresSubsetStrategyGrid: Array[String] = Array("auto"),
-                                      impurity: String = "variance",
-                                      maxDepthGrid: Array[Int] = Array(2),
-                                      maxBinsGrid: Array[Int] = Array(4)) = {
-
-    val gridSearch =
-
-      for (numTrees <- numTreesGrid;
-           featuresSubsetStrategy <- featuresSubsetStrategyGrid;
-           maxDepth <- maxDepthGrid;
-           maxBins <- maxBinsGrid)
-        yield {
-
-          val model = RandomForest.trainRegressor(trainSet, categoricalFeaturesInfo,
-            numTrees, featuresSubsetStrategy, impurity, maxDepth, maxBins)
-
-          val accuracyVal = calculateRMSE(model, valSet)
-
-          ((numTrees, featuresSubsetStrategy, maxDepth, maxBins), accuracyVal)
-        }
-
-    val params = gridSearch.sortBy(_._2).take(1)(0)._1
-    val numTrees = params._1
-    val featuresSubsetStrategy = params._2
-    val maxDepth = params._3
-    val maxBins = params._4
-
-    (categoricalFeaturesInfo, numTrees, featuresSubsetStrategy, impurity, maxDepth, maxBins)
-}
                 </code></pre>
             </section>
         </section>
