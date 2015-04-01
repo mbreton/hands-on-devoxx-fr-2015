@@ -874,8 +874,8 @@ val model = randomForestTrainRegressor(categoricalFeaturesInfo=categoricalFeatur
   numTrees = 10, maxDepth = 20, maxBins = 30)(dataTrain)
 
 // Evaluation
-val rmseTrain = calculateRMSE(model, dataTrain)
-val rmseTest = calculateRMSE(model, testSet)
+val rmseTrain = getRMSE(model, dataTrain)
+val rmseTest = getRMSE(model, testSet)
 
 // Show Evaluation results
 println(s"Train Error: $rmseTrain")
@@ -916,13 +916,25 @@ def featureEngineering(rdd: RDD[String]): RDD[LabeledPoint] = {
             <section>
                 <h4>Solution TODO 1: Metrics</h4>
                 <pre class="scala"><code class="hljs">
-def calculateRMSE(model: RandomForestModel, data: RDD[LabeledPoint]): Double = {
+def getRMSE(model: RandomForestModel, data: RDD[LabeledPoint]): Double = {
 
     val predictionsAndLabels = data.map(example => (model.predict(example.features), example.label))
+    calculateRMSE(predictionsAndLabels)
+}
 
-    math.sqrt(predictionsAndLabels.map{case(v,p) => math.pow((v - p), 2)}.mean())
+def calculateRMSE(rdd: RDD[(Double, Double)]): Double ={
+    math.sqrt(rdd.map{case(v,p) => math.pow(v - p, 2)}.mean())
 }
                 </code></pre>
+            </section>
+            <section id="date_features">
+                <h4>TODO 2 : Date features</h4>
+                <p class="offset-left">
+                    <p>
+                        <span class="bold">Réalisation :</span>
+                        Créer de nouvelles features provenant de la date et observer l'amélioration des résultats de prédicion (baisse du RMSE)
+                    </p>
+                </p>
             </section>
             <section>
                 <h4>Solution TODO 2: Feature Engineering</h4>
@@ -985,8 +997,8 @@ val model = randomForestTrainRegressor(categoricalFeaturesInfo=categoricalFeatur
   numTrees = 10, maxDepth = 20, maxBins = 30)(dataTrain)
 
 // Evaluation
-val rmseTrain = calculateRMSE(model, dataTrain)
-val rmseTest = calculateRMSE(model, testSet)
+val rmseTrain = getRMSE(model, dataTrain)
+val rmseTest = getRMSE(model, testSet)
 
 // Show Evaluation results
 println(s"Train Error: $rmseTrain")
@@ -1020,7 +1032,7 @@ def gridSearchRandomForestRegressor(trainSet: RDD[LabeledPoint],
                                       valSet: RDD[LabeledPoint],
                                       categoricalFeaturesInfo: Map[Int, Int] = Map[Int, Int](),
                                       numTreesGrid: Array[Int] = Array(10),
-                                      featuresSubsetStrategyGrid: Array[String] = Array("auto"),
+                                      featuresSubsetStrategy: String = "auto",
                                       impurity: String = "variance",
                                       maxDepthGrid: Array[Int] = Array(2),
                                       maxBinsGrid: Array[Int] = Array(4)) = {
@@ -1028,7 +1040,6 @@ def gridSearchRandomForestRegressor(trainSet: RDD[LabeledPoint],
     val gridSearch =
 
       for (numTrees <- numTreesGrid;
-           featuresSubsetStrategy <- featuresSubsetStrategyGrid;
            maxDepth <- maxDepthGrid;
            maxBins <- maxBinsGrid)
         yield {
@@ -1036,16 +1047,15 @@ def gridSearchRandomForestRegressor(trainSet: RDD[LabeledPoint],
           val model = RandomForest.trainRegressor(trainSet, categoricalFeaturesInfo,
             numTrees, featuresSubsetStrategy, impurity, maxDepth, maxBins)
 
-          val accuracyVal = calculateRMSE(model, valSet)
+          val rmseVal = getRMSE(model, valSet)
 
-          ((numTrees, featuresSubsetStrategy, maxDepth, maxBins), accuracyVal)
+          ((numTrees, maxDepth, maxBins), rmseVal)
         }
 
     val params = gridSearch.sortBy(_._2).take(1)(0)._1
     val numTrees = params._1
-    val featuresSubsetStrategy = params._2
-    val maxDepth = params._3
-    val maxBins = params._4
+    val maxDepth = params._2
+    val maxBins = params._3
 
     (categoricalFeaturesInfo, numTrees, featuresSubsetStrategy, impurity, maxDepth, maxBins)
 }
@@ -1080,8 +1090,8 @@ val dataTrain = sc.union(trainSet, valSet)
 val model = (randomForestTrainRegressor _).tupled(bestParams)(dataTrain)
 
 // Evaluation
-val rmseTrain = calculateRMSE(model, dataTrain)
-val rmseTest = calculateRMSE(model, testSet)
+val rmseTrain = getRMSE(model, dataTrain)
+val rmseTest = getRMSE(model, testSet)
 
 
 // Show Evaluation results
