@@ -9,6 +9,11 @@ import org.joda.time.DateTime
 
 object Engineering {
 
+  /**
+   * Perform feature engineering : Prepare and create features
+   * @param rdd A RDD containing the raw data
+   * @return A RDD[LabeledPoint]
+   */
   def featureEngineering(rdd: RDD[String]) : RDD[LabeledPoint] = {
 
     val dataParsed = rdd.map {
@@ -16,6 +21,7 @@ object Engineering {
 
         val values = line.split(',')
 
+        val dateString = values(0).split(" ")(0)
         // TODO 3 : Create features from dates
 
         // Convert all features but date to double

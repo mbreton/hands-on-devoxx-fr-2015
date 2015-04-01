@@ -19,17 +19,18 @@ object NaiveBayesClassification {
     // Loading Data
     // TODO : Read File ./source/sms_train.csv
 
-    // Parsing & Feature Engineering
-    // TODO : Modify the featureEngineering method in features/Engineering and parse the data
+    // Feature Engineering
+    // TODO : Complete the featureEngineering method in features/Engineering and call it on the loaded data
 
     // Splitting
-    // TODO : Split the dataset in a train and a test set (proportions 0.75, 0.25)
+    // TODO : Split the dataset in a train and a test set (proportions 0.75, 0.25) using the 'randomSplit' method
 
     // Modelling
     // TODO : Train a Naive Bayes model on the train set
 
     // Evaluation
-    // TODO : Calculate the precision and the confusion matrix after prediction on the test set.
+    // TODO : Call the getMetrics method in tools/Utilities on the test set
+    // TODO : Call the precision and confusionMatrix parameters to know the classification accuracy
     // TODO : Do the same for the train set for comparison
 
     // Print results

@@ -27,7 +27,7 @@ object Engineering {
     val tfidf: RDD[Vector] = idf.transform(tf)
 
     // Zip targets and features and convert to LabeledPoint
-    targets.zip(tfidf).map(x => LabeledPoint(x._1, x._2))
+    targets.zip(tfidf).map(l => LabeledPoint(l._1, l._2))
 
   }
 

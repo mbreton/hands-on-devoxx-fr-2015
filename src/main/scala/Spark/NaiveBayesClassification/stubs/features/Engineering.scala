@@ -12,22 +12,23 @@ object Engineering {
 
   def featureEngineering(data : RDD[String]): RDD[LabeledPoint] = {
 
-    // TODO : Create the targets rdd, composed of doubles (1.0 if "SPAM", 0.0 else)
+    val targets = data.map(line => if (line.split("\t")(0) == SPAM) 1.0 else 0.0)
 
     // RDD of words in sms
     val smsRDD: RDD[Seq[String]] = data.map(line => line.split("\t")(1)).map(_.split(" ").toSeq)
 
-    // HashingTF
+    // Convert sms to dictionary of words thanks to TF-IDF transformation
     val hashingTF = new HashingTF()
     val tf: RDD[Vector] = hashingTF.transform(smsRDD)
     tf.cache()
-
-    // TF-IDF
     val idf = new IDF().fit(tf)
     val tfidf: RDD[Vector] = idf.transform(tf)
 
-    // TODO : Zip targets and features and convert to LabeledPoint in a map (replace the following line with the right rdd)
-    smsRDD.map(l => LabeledPoint(0, Vectors.dense(Array(0d))))
+    // Zip targets and features
+    val datasetRDD = targets.zip(tfidf)
+
+    // TODO : Convert datasetRDD to a RDD[LabeledPoint] thanks to a map (replace the following line with the right map)
+    datasetRDD.map(l => LabeledPoint(0, Vectors.dense(Array(0d))))
   }
 
 }
