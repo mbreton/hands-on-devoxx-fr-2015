@@ -1107,6 +1107,82 @@ println(s"Test Error: $rmseTest")
                 <!-- Put our comments her -->
             </aside>
         </section>
+        <section>
+            <h3>Mise en pratique</h3>
+            <section id="bike-demand-prediction">
+                <h4>Prédiction de la demande de vélos</h4>
+                Features présentes dans le dataset bike_train.csv
+                <p class="offset-left">
+                    <p>
+                        <span class="bold">date</span> : La date au format "YYYY-MM-DD HH:MM:SS"
+                    </p>
+                    <p>
+                        <span class="bold">season_{1,2,3,4}</span> : Saison (binaire)
+                    </p>
+                    <p>
+                        <span class="bold">holiday</span> : Vacances (binaire)
+                    </p>
+                    <p>
+                        <span class="bold">weather_{1,2,3,4}</span> : Catégorie de temps (binaire)
+                    </p>
+                    <p>
+                        <span class="bold">temperature</span> : Température moyenne (entre 0 et 1) 
+                    </p>
+                    <p>
+                        <span class="bold">humidity</span> : Humidité moyenne (entre 0 et 1)
+                    </p>
+                    <p>
+                        <span class="bold">windspeed</span> : Vitesse moyenne du vent
+                    </p>
+                    <p>
+                        <span class="bold">count</span> : La variable cible - Nombre de vélos loués pendant la journée
+                    </p>
+                </p>
+            </section>
+            <section id="data_science_pipeline">
+                <h4>Démarche globale en Data Science</h4>
+                <p class="offset-left">
+                    <p>
+                        Step 1 : Chargement des données
+                    </p>
+                    <p>
+                        Step 2 : Feature Engineeging (Nettoyage, création et préparation des features)
+                    </p>
+                    <p>
+                        Step 3 : Splitting (train, validation et test sets)
+                    </p>
+                    <p>
+                        Step 4 : Tuning des paramètres (à la main ou grid search)
+                    </p>
+                    <p>
+                        Step 5 : Modelling sur train+validation set
+                    </p>
+                    <p>
+                        Step 6 : Prediction sur le test set
+                    </p>
+                </p>
+            </section>
+            <section id="grid_search">
+                <h4>Le Grid Search</h4>
+                <p class="offset-left">
+                    <p>
+                        <span class="bold">Objectif</span> : Tester, pour chaque paramètre, plusieurs possibilités
+                    </p>
+                    <p>
+                        <span class="bold">Réalisation</span>
+                        <p>
+                            Pour chaque combinaison de paramètres, construire un modèle basé sur le train set
+                        </p>
+                        <p> 
+                            Calculer le score de prédiction de chaque modèle sur le validation set
+                        </p>
+                        <p>
+                            Sélectionner le jeu de paramètres ayant donné le meilleur score
+                        </p>
+                    </p>
+                </p>
+            </section>
+        </section>
     </div>
     <div class="footer">
         <span class="hashtag">#LearnMLWithSpark</span>
