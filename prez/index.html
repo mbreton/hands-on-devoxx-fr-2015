@@ -760,14 +760,15 @@ def getMetrics(model: NaiveBayesModel, data: RDD[LabeledPoint]): MulticlassMetri
                 $$H(X) = - \sum_{k=1}^{K}{P(x_k) log(P(x_k))}$$
                 <p><span class="bold">Exemple :</span> X = Résultat d'un lancer de pièce.</p>
                 $$H(X) = - [P(X=Pile) log(P(X=Pile)) + P(X=Face) log(P(X=Face))]$$
-                <div>
-                    <div>
-                        Si pièce non truquée:
+                <br/>
+                <div style="font-size: 0.65em;text-align: left">
+                    <div class="half">
+                        <p>Si pièce non truquée:</p>
                         $$P(x=Pile) = P(X=Face) = 0.5$$
                         $$H(X) = -(0.5*log(0.5) + 0.5*log(0.5)) = 1 bit$$
                     </div>
-                    <div>
-                        Si pièce truquée:
+                    <div class="half" >
+                        <p>Si pièce truquée:</p>
                         $$P(x=Pile) = 0.8; P(X=Face) = 0.2$$
                         $$H(X) = -(0.8*log(0.8) + 0.2*log(0.2)) = 0.722 bit$$
                     </div>
@@ -782,22 +783,24 @@ def getMetrics(model: NaiveBayesModel, data: RDD[LabeledPoint]): MulticlassMetri
             </section>
             <section>
                 <h4>Exemple</h4>
-                <div class="half">
-                    <img src="images/outlook.png">
-                </div>
-                <div class="half">
-                    <p>
-                        $$H_{0} = - \frac{5}{10}log(\frac{5}{10}) - \frac{5}{10}log(\frac{5}{10}) = 1$$
-                    </p>
-                    <p>
-                        $$H_{1,1} = - \frac{2}{5}log(\frac{2}{5}) - \frac{3}{5}log(\frac{3}{5}) = 0.97$$
-                    </p>
-                    <p>
-                        $$H_{1,2} = - \frac{2}{5}log(\frac{2}{5}) - \frac{3}{5}log(\frac{3}{5}) = 0.97$$
-                    </p>
-                    <p>
-                        $$IG_{Outlook} = H_{0} -  (\frac{5}{10} * H_{1,1} + \frac{5}{10} * H_{1,2}) = 0.03$$
-                    </p>
+                <div>
+                    <div class="half">
+                        <img src="images/outlook.png">
+                    </div>
+                    <div class="half">
+                        <p>
+                            $$H_{0} = - \frac{5}{10}log(\frac{5}{10}) - \frac{5}{10}log(\frac{5}{10}) = 1$$
+                        </p>
+                        <p>
+                            $$H_{1,1} = - \frac{2}{5}log(\frac{2}{5}) - \frac{3}{5}log(\frac{3}{5}) = 0.97$$
+                        </p>
+                        <p>
+                            $$H_{1,2} = - \frac{2}{5}log(\frac{2}{5}) - \frac{3}{5}log(\frac{3}{5}) = 0.97$$
+                        </p>
+                        <p>
+                            $$IG_{Outlook} = H_{0} -  (\frac{5}{10} * H_{1,1} + \frac{5}{10} * H_{1,2}) = 0.03$$
+                        </p>
+                    </div>
                 </div>
                 <div class="center">
                     <img src="images/tableau4.png" style="width: 40%; height: 40%" class="fragment">
@@ -807,18 +810,20 @@ def getMetrics(model: NaiveBayesModel, data: RDD[LabeledPoint]): MulticlassMetri
         <section>
             <h3>Random Forest</h3>
             <section>
-                <div class="half">
-                    <img src="images/RandomForest.png">
-                </div>
-                <div class="half">
-                    <p><span class="bold">Idée : </span>Créer plusieurs arbres et rassembler les prédictions pour prendre une décision finale plus stable.</p>
-                    <p><span class="bold">Principe:</span>
-                        <ul>
-                            <li>Ajout d'aléatoire dans la sélection des données</li>
-                            <li>Ajout d'aléatoire dans la sélection des features</li>
-                        </ul>
-                    </p>
-                    <p><span class="bold">Conclusion :</span> Moins interprétable (perte de la structure hiérarchique) mais gain en stabilité et robustesse</p>
+                <div>
+                    <div class="half">
+                        <img src="images/RandomForest.png">
+                    </div>
+                    <div class="half">
+                        <p><span class="bold">Idée : </span>Créer plusieurs arbres et rassembler les prédictions pour prendre une décision finale plus stable.</p>
+                        <p><span class="bold">Principe:</span>
+                            <ul>
+                                <li>Ajout d'aléatoire dans la sélection des données</li>
+                                <li>Ajout d'aléatoire dans la sélection des features</li>
+                            </ul>
+                        </p>
+                        <p><span class="bold">Conclusion :</span> Moins interprétable (perte de la structure hiérarchique) mais gain en stabilité et robustesse</p>
+                    </div>
                 </div>
             </section>
         </section>
