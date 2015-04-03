@@ -1,3 +1,5 @@
+// To execute in shell
+
 import sqlContext.implicits._
 import org.apache.spark.rdd.RDD
 
