@@ -1,6 +1,6 @@
 package spark.randomForestRegression.stubs
 
-import spark.randomForestRegression.solution.features.Engineering.featureEngineering
+import spark.randomForestRegression.stubs.features.Engineering.featureEngineering
 import org.apache.spark.{SparkContext, SparkConf}
 import spark.randomForestRegression.stubs.tools.Utilities.{extractHeader, calculateRMSE}
 import spark.randomForestRegression.stubs.modelling.RandomForestObject.{randomForestTrainRegressor, gridSearchRandomForestRegressor}
