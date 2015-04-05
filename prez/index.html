@@ -91,8 +91,8 @@
             <h2>Agenda</h2>
             <ol>
                 <li>Les bases du Machine Learning</li>
-                <li>TP Kmeans</li>
-                <li>TP Naive Bayes</li>
+                <li>Présentation Kmeans</li>
+                <li>Présentation et TP Naive Bayes</li>
                 <li>- Break -</li>
                 <li>Présentation de Spark & MLlib</li>
                 <li>Naive Bayes avec Spark</li>
@@ -109,6 +109,14 @@
             </aside>
         </section>
         <section>
+            <section>
+                <div class="center">
+                    <img src="images/ml.png" />
+                </div>
+                <aside class="notes">
+                    <!-- Put our comments her -->
+                </aside>
+            </section>
             <section>
                 <h3>Qu'est ce donc ?</h3>
                 <blockquote>
@@ -129,36 +137,39 @@
         </section>
         <section>
             <h3>Cas d'utilisation</h3>
-            <p>Classification</p>
-        </section>
-        <section>
-            <h3>Cas d'utilisation</h3>
-            <div>
-                <p>Régréssion</p>
-            </div>
-            <div>
-                <p>Graph</p>
-            </div>
-        </section>
-        <section>
-            <h3>Cas d'utilisation</h3>
-            <div>
-                <p>Recommandation</p>
-                <img src="images/reco.jpg" >
-            </div>
-            <div>
-                <p>Graph</p>
-            </div>
-        </section>
-        <section>
-            <h3>Cas d'utilisation</h3>
-            <div>
-                <p>Clustering</p>
-                <img src="images/reco.jpg" >
-            </div>
-            <div>
-                <p>Clustering</p>
-            </div>
+            <section>
+                <div class="half">
+                    <p>Classification</p>
+                </div>
+                <div class="half">
+                    new.google.fr
+                    <img height="500px" src="images/classification.png" />
+                </div>
+            </section>
+            <section>
+                <div class="half">
+                    <p>Régréssion</p>
+                </div>
+                <div class="half">
+                    <img src="images/regression.png" />
+                </div>
+            </section>
+            <section>
+                <div class="half">
+                    <p>Recommandation</p>
+                </div>
+                <div class="half">
+                    <img src="images/reco.png" />
+                </div>
+            </section>
+            <section>
+                <div class="half">
+                    <p>Clustering</p>
+                </div>
+                <div class="half">
+                    <img src="images/clustering.png" />
+                </div>
+            </section>
         </section>
         <section>
             <h3>Approches : supervisé (dirigé)</h3>
@@ -201,21 +212,35 @@
         <section>
             <h3>Kmeans</h3>
             <section>
-                <p>Type: Non supervisé</p>
-                <p>But: Trouver des groupes dans un jeu de données</p>
+                <p><span class="bold">Type</span> : Non supervisé</p>
+                <p><span class="bold">But</span> : Trouver des groupes dans un jeu de données</p>
             </section>
             <section>
-                <p>Exemple : Quels groupes puis-je identifier dans ma base client ?</p>
+                <p><span class="bold">Exemple</span> : Quels groupes puis-je identifier dans ma base client ?</p>
             </section>
             <section>
-                <ul>
-                    <li>Client 1 : 24ans, 1 exemplaire</li>
-                    <li>Client 2 : 32ans, 2 exemplaires</li>
-                    <li>Client 3 : 27ans, 5 exemplaires</li>
-                </ul>
-            </section>
-            <section>
-                (24;1), (32;2), (37;5)
+                <table>
+                    <tr>
+                        <td>Client 1</td>
+                        <td>24ans</td>
+                        <td>1 exemplaire</td>
+                    </tr>
+                    <tr>
+                        <td>Client 2</td>
+                        <td>32ans</td>
+                        <td>2 exemplaires</td>
+                    </tr>
+                    <tr>
+                        <td>Client 3</td>
+                        <td>37ans</td>
+                        <td>5 exemplaires</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <br/>
+                <p class="fragment center">
+                   Points : (24;1), (32;2), (37;5)
+                </p>
             </section>
             <section>
                 <img src="images/kmean1.png">
@@ -242,17 +267,21 @@
         <section>
             <h3>Classification naive Bayesienne</h3>
             <section>
-                <p>Type: Supervisé</p>
-                <p>But: Déterminer la catégorie d'un élément</p>
+                <p><span class="bold">Type</span> : Supervisé</p>
+                <p><span class="bold">But</span> : Déterminer la catégorie d'un élément</p>
             </section>
             <section>
                 <p>Probabilités</p>
                 <p>&Omega;, F, P</p>
             </section>
             <section>
+                <h4>Le théorème de Bayes</h4>
                 <p>$$p(A|B) = \frac{p(B|A)*p(A)}{p(B)}$$</p>
             </section>
             <section>
+                <p>
+                    <span class="bold">Exemple</span> : Détection de SPAM
+                </p>
                 <p>M : J'ai un message M</p>
                 <p>S : C'est un spam</p>
                 <p>$$p(S|M) = \frac{p(M|S)*p(S)}{p(M)}$$</p>
@@ -263,10 +292,13 @@
             <section>
                 <p>$$k=\frac{p(S=1|W_1,...,W_n)}{p(S=0|W_1,...,W_n)}$$</p>
                 <p> </p>
-                <p>$$= \frac{p(W_1,...,W_n|S=1)* p(S=1)}{p(W_1,...,W_n)}*\frac{p(W_1,...,W_n)}{p(W_1,...,W_n|S=0)* p(S=0)}$$</p>
+                <p>$$\require{cancel}= \frac{p(W_1,...,W_n|S=1)* p(S=1)}{\cancel{p(W_1,...,W_n)}}*\frac{\cancel{p(W_1,...,W_n)}}{p(W_1,...,W_n|S=0)* p(S=0)}$$</p>
                 <p style="margin-top:100px" class="center">
-                    k > 1  : Spam<br/>
-                    k <= 1  : Ham
+                    'k' = Est-ce un spam ?
+                    <br/>
+                    k > 1  -> Spam
+                    <br/>
+                    k <= 1  -> Ham
                 </p>
             </section>
             <section>
@@ -278,17 +310,25 @@
             </section>
             <section>
                 $$p(W_1,...W_n|S)=\prod_{i=1}^{N}{p(W_i|S)}$$
+                <br/>
+                <br/>
                 $$k=\frac{\prod_{i=1}^{N}{p(W_i|S=1)*p(S=1)}}{\prod_{i=1}^{N}{p(W_i|S=0) * p(S=0)}}$$
             </section>
             <section id="naive-4">
                 <h4>Du coup ?</h4>
-                <p>$$k=\frac{\prod_{i=1}^{N}{p(W_i|S=1)p(S=1)}}{\prod_{i=1}^{N}{p(W_i|S=0) * p(S=0)}}$$</p>
+                <p>$$k=\frac{\prod_{i=1}^{N}{p(W_i|S=1)*p(S=1)}}{\prod_{i=1}^{N}{p(W_i|S=0) * p(S=0)}}$$</p>
                 <p>$$p(S=1)=\frac{\text{nombre de spams observés}}{\text{nombre total de messages}}$$</p>
                 <p>$$p(S=0) = 1 - p(S=1)$$</p>
                 <p>$$p(W_i|S=t)=\frac{\text{nombre de messages de type t dans lesquels }W_i\text{ apparait}}{\text{nombre de messages de type t}}$$</p>
             </section>
             <section>
-                <h2>Implémentation</h2>
+                <h2>Tp : Naive Bayes</h2>
+            </section>
+            <section>
+                <h3>Tp : Naive Bayes</h3>
+                <p>Ouvrir le fichier src/test/scala/NaiveBayesSpec.scala</p>
+                <p>Ouvrir le fichier src/main/scala/NaiveBayes.scala</p>
+                <p>Lancer 'sbt test' à la racine du projet</p>
             </section>
             <section>
                 <h3>Un peu de recul sur l'algo</h3>
@@ -852,7 +892,7 @@ def getMetrics(model: NaiveBayesModel, data: RDD[LabeledPoint]): MulticlassMetri
                         <span class="bold">weather_{1,2,3}</span> : Catégorie de temps (binaire)
                     </li>
                     <li>
-                        <span class="bold">temperature</span> : Température moyenne (entre 0 et 1) 
+                        <span class="bold">temperature</span> : Température moyenne (entre 0 et 1)
                     </li>
                     <li>
                         <span class="bold">humidity</span> : Humidité moyenne (entre 0 et 1)
@@ -1083,7 +1123,7 @@ println(s"Test Error: $rmseTest")
                         <li>
                             Pour chaque combinaison de paramètres, construire un modèle basé sur le train set
                         </li>
-                        <li> 
+                        <li>
                             Calculer le score de prédiction de chaque modèle sur le validation set
                         </li>
                         <li>
@@ -1193,7 +1233,7 @@ println(s"Test Error: $rmseTest")
                         <span class="bold">weather_{1,2,3,4}</span> : Catégorie de temps (binaire)
                     </p>
                     <p>
-                        <span class="bold">temperature</span> : Température moyenne (entre 0 et 1) 
+                        <span class="bold">temperature</span> : Température moyenne (entre 0 et 1)
                     </p>
                     <p>
                         <span class="bold">humidity</span> : Humidité moyenne (entre 0 et 1)
@@ -1240,7 +1280,7 @@ println(s"Test Error: $rmseTest")
                         <p>
                             Pour chaque combinaison de paramètres, construire un modèle basé sur le train set
                         </p>
-                        <p> 
+                        <p>
                             Calculer le score de prédiction de chaque modèle sur le validation set
                         </p>
                         <p>
