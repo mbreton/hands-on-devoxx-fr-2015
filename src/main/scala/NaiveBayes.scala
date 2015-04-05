@@ -1,4 +1,8 @@
-class SpamClassifier(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) {
+import com.typesafe.scalalogging.LazyLogging
+
+import scala.util.Try
+
+class SpamClassifier(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) extends LazyLogging{
 
   val totalNumberOfMsg = flaggedBagsOfWord.length
   val numberOfSpam = flaggedBagsOfWord.count(_.isSpam)
@@ -74,13 +78,23 @@ class SpamClassifier(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) {
    * @return The probability of the given word knowing the type of its message
    */
   def pWord(word: String, isSpam: Boolean): Double = {
-    if (occurrences(isSpam).contains(word)) occurrences(isSpam)(word).toDouble / count(isSpam)
-    else 0.0001
+//    logger.debug(s"pWord($word|$isSpam)")
+    Try(
+      time("occurences", {occurrences(isSpam)(word).toDouble}) / count(isSpam)
+    ).getOrElse(0.0001)
+  }
+
+  def time[R](subject:String, block: => R): R = {
+    val t0 = System.nanoTime()
+    val result = block    // call-by-name
+    val t1 = System.nanoTime()
+    logger.debug(s"$subject : ${(t1 - t0)/ Math.pow(10, 6)}ms")
+    result
   }
 
   /**
    * The second p function compute the probability of a message knowing that its type
-   * To implement it, you can use the {@link NaiveBayes.toBagOfWords} method and then
+   * To implement it, you can use the {@link DateSetUtils.toBagOfWord} method and then
    * compute the product of the probabilities of each word
    *
    * Take care to return a Double and not an Int !
@@ -91,8 +105,11 @@ class SpamClassifier(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) {
    * @return The computed probability
    */
   def p(msg: String, isSpam: Boolean): Double = {
-    NaiveBayes.toBagOfWord(msg).foldLeft(1.0) {
-      case (probability, (word, _)) => probability * pWord(word, isSpam)
+//    logger.debug(s"P($msg|$isSpam)")
+    time ("bagOfWord", {DateSetUtils.toBagOfWord(msg)}).foldLeft(1.0) {
+      case (probability, (word, occ)) => {
+        time ("proba*pWord", {probability * time("pWord", {pWord(word, isSpam)})})
+      }
     }
   }
 
@@ -105,7 +122,10 @@ class SpamClassifier(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) {
    * @return If it's a spam
    */
   def isSpam(msg: String): Boolean = {
-    ((p(msg, true) * p(true)) / (p(msg, false) * p(false))) > 1
+    time ("isSpam", {
+      val p1: Double = time ("p1", {p(msg, true)})
+      val p2: Double = time ("p2", {p(msg, false)})
+      ((p1 * p(true)) / (p2 * p(false))) > 1})
   }
 }
 
@@ -123,25 +143,15 @@ case class FlaggedMessage(isSpam: Boolean, content: String)
  */
 case class FlaggedBagOfWord(isSpam: Boolean, occurrences: Map[String, Int])
 
+object DateSetUtils {
 
-/**
- * Naive bayes's main class
- */
-object NaiveBayes {
-
-  def loadDataSet(text: String) {
-    val messages: List[FlaggedMessage] = fromRawToStructured(text)
-    val (trainingData, validationData) = messages.splitAt(messages.length - 1000)
-    val data = trainingData
-      .map(m => FlaggedBagOfWord(m.isSpam, toBagOfWord(m.content)))
-
-    val classifier = new SpamClassifier(data)
-  }
+  val wordOfMoreThanTwoLettersRegex = "[\\w\\d]{2,}".r
+  val lineRegex = "(spam|ham)\\s(.*)".r
+  val htmlCodePattern: String = "&.*?;"
 
   def fromRawToStructured(data: String): List[FlaggedMessage] = {
-    val regex = "(spam|ham)\\s(.*)".r
     data.split("\n").collect {
-      case regex(flag, content) => FlaggedMessage(isSpam = flag == "spam", content)
+      case lineRegex(flag, content) => FlaggedMessage(isSpam = flag == "spam", content)
     }.toList
   }
 
@@ -150,8 +160,7 @@ object NaiveBayes {
   }
 
   def sanitize(text: String): List[String] = {
-    val wordOfMoreThanTwoLetters = "[\\w\\d]{2,}".r
-    val textWithoutHtmlCode: String = text.toLowerCase.replaceAll("&.*?;", " ")
-    (wordOfMoreThanTwoLetters findAllIn textWithoutHtmlCode).toList
+    val textWithoutHtmlCode: String = text.toLowerCase.replaceAll(htmlCodePattern, " ")
+    (wordOfMoreThanTwoLettersRegex findAllIn textWithoutHtmlCode).toList
   }
 }

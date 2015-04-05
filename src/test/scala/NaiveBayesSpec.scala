@@ -1,6 +1,9 @@
+import DateSetUtils.{fromRawToStructured, toBagOfWord}
 import org.scalatest.{CancelAfterFailure, FunSuite}
 
-class SpamClassifierTest extends FunSuite with CancelAfterFailure {
+import scala.io.Source.fromInputStream
+
+class NaiveBayesSpec extends FunSuite with CancelAfterFailure {
 
   test("merge two occurrence lists") {
     val classifier = new SpamClassifier()
@@ -88,5 +91,22 @@ class SpamClassifierTest extends FunSuite with CancelAfterFailure {
     val classifier = new SpamClassifier(bagsOfWord)
     assert(classifier.isSpam("Can you send money !?"))
     assert(!classifier.isSpam("How are you ? Have you take your pills ?"))
+  }
+
+  val VALIDATION_DATASET_SIZE: Int = 1000
+  test("should load text") {
+    val source = fromInputStream(getClass.getResourceAsStream("SMSSpamCollection")).mkString
+    val messages: List[FlaggedMessage] = fromRawToStructured(source)
+    val (trainingData, validationData) = messages.splitAt(messages.length - VALIDATION_DATASET_SIZE)
+    val data = trainingData.map(m => FlaggedBagOfWord(m.isSpam, toBagOfWord(m.content)))
+
+    val classifier = new SpamClassifier(data)
+    val countSpamsInValidation = validationData.count(_.isSpam)
+    val countAccuratePrediction = validationData.count{ message =>
+      classifier.isSpam(message.content) == message.isSpam
+    }
+    val correctlyClassified = countAccuratePrediction / VALIDATION_DATASET_SIZE
+
+    assert(correctlyClassified > 60)
   }
 }

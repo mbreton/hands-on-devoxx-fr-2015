@@ -11,3 +11,5 @@ libraryDependencies += "org.apache.spark" %% "spark-core" % "1.3.0"
 libraryDependencies += "org.apache.spark" %% "spark-mllib" % "1.3.0"
 
 libraryDependencies += "joda-time" % "joda-time" % "2.7"
+
+libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0"
