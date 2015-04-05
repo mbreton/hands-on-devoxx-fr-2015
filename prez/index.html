@@ -250,29 +250,35 @@
                 <p>&Omega;, F, P</p>
             </section>
             <section>
-                <p>$$p(A|B) = \frac{p(B|A) p(A)}{p(B)}$$</p>
+                <p>$$p(A|B) = \frac{p(B|A)*p(A)}{p(B)}$$</p>
             </section>
             <section>
                 <p>M : J'ai un message M</p>
                 <p>S : C'est un spam</p>
-                <p>$$p(S|M) = \frac{p(M|S) p(S)}{p(M)}$$</p>
+                <p>$$p(S|M) = \frac{p(M|S)*p(S)}{p(M)}$$</p>
             </section>
             <section id="naive-too-long">
-                <p>$$p(S|W_1,...,W_n) = \frac{p(W_1,...,W_n|S) p(S)}{p(W_1,...,W_n)}$$</p>
+                <p>$$p(S|W_1,...,W_n) = \frac{p(W_1,...,W_n|S)*p(S)}{p(W_1,...,W_n)}$$</p>
             </section>
             <section>
                 <p>$$k=\frac{p(S=1|W_1,...,W_n)}{p(S=0|W_1,...,W_n)}$$</p>
                 <p> </p>
                 <p>$$= \frac{p(W_1,...,W_n|S=1)* p(S=1)}{p(W_1,...,W_n)}*\frac{p(W_1,...,W_n)}{p(W_1,...,W_n|S=0)* p(S=0)}$$</p>
+                <p style="margin-top:100px" class="center">
+                    k > 1  : Spam<br/>
+                    k <= 1  : Ham
+                </p>
             </section>
             <section>
                 <p>Hypothèse dans le cas naif : indépendance</p>
-                $$p(A,B|C)=p(A|C)p(B|C)$$
-                $$p(W_1,...W_n|S=1)=p(W_1|S=1) p(W_2|S=1)...(W_n|S=1)$$
+                <br/>
+                $$p(A,B|C)=p(A|C)*p(B|C)$$
+                <br/>
+                $$p(W_1,...W_n|S=1)=p(W_1|S=1)*p(W_2|S=1)...(W_n|S=1)$$
             </section>
             <section>
                 $$p(W_1,...W_n|S)=\prod_{i=1}^{N}{p(W_i|S)}$$
-                $$k=\frac{\prod_{i=1}^{N}{p(W_i|S=1)p(S=1)}}{\prod_{i=1}^{N}{p(W_i|S=0) * p(S=0)}}$$
+                $$k=\frac{\prod_{i=1}^{N}{p(W_i|S=1)*p(S=1)}}{\prod_{i=1}^{N}{p(W_i|S=0) * p(S=0)}}$$
             </section>
             <section id="naive-4">
                 <h4>Du coup ?</h4>
