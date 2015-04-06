@@ -13,3 +13,12 @@ libraryDependencies += "org.apache.spark" %% "spark-mllib" % "1.3.0"
 libraryDependencies += "joda-time" % "joda-time" % "2.7"
 
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0"
+
+//retrieveManaged := true
+
+
+//unmanagedJars in Compile <<= baseDirectory map { base => (base ** "*.jar").classpath }
+//
+//resolvers += Resolver.file("publishTo", file("./ivy2")) transactional()
+//
+//externalResolvers := Resolver.withDefaultResolvers(resolvers.value, mavenCentral = false)

@@ -104,11 +104,11 @@ class NaiveBayesSpec extends FunSuite with CancelAfterFailure {
 
     val classifier = new SpamClassifier(data)
     val countSpamsInValidation = validationData.count(_.isSpam)
-    val countAccuratePrediction = validationData.count{ message =>
+    val countAccuratePrediction:Double = validationData.count{ message =>
       classifier.isSpam(message.content) == message.isSpam
     }
-    val correctlyClassified = countAccuratePrediction / VALIDATION_DATASET_SIZE
+    val correctlyClassifiedPercentage = countAccuratePrediction / VALIDATION_DATASET_SIZE * 100
 
-    assert(correctlyClassified > 60)
+    assert(correctlyClassifiedPercentage == 98)
   }
 }

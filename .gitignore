@@ -21,3 +21,5 @@ project/plugins/project/
 #idea
 .idea
 *.iml
+
+.ivy2.zip
