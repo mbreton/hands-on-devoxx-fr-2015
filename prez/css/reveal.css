@@ -368,9 +368,10 @@ body {
     padding-top: 1.2em !important;
 }
 
-.half{
+div.half{
     display: inline-block;
     width: 49.5%;
+    vertical-align: top;
 }
 
 #naive-too-long .MathJax{

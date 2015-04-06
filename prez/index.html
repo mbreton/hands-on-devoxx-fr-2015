@@ -381,7 +381,7 @@
             <div class="center">
                 <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1165414/MRSandwich.png">
             </div>
-            <aside>
+            <aside class="notesn">
                 Slide mapreduce : Appuyé sur le fait qu’on peut paralléliser le processus de découpe et d’assemblage indépendamment.
             </aside>
         </section>
@@ -635,7 +635,9 @@ val neg = LabeledPoint(0.0, Vectors.sparse(3, Array(0, 2), Array(1.0, 3.0)))
 
     val parsedData = data.map { line =>
     val parts = line.split(',')
-    LabeledPoint(parts(0).toDouble, Vectors.dense(parts(1).split(' ').map(_.toDouble)))
+    LabeledPoint(parts(0).toDouble, Vectors.dense(parts(1)
+                                           .split(' ')
+                                           .map(_.toDouble)))
     }
                 </code></pre>
             </section>
@@ -664,7 +666,7 @@ val neg = LabeledPoint(0.0, Vectors.sparse(3, Array(0, 2), Array(1.0, 3.0)))
                 <div class="half">
                     <img src="images/organisation_projet.png">
                 </div>
-                <div class="half">
+                <div class="half" style="font-size: 0.9em">
                     <span class="bold">Deux packages:</span>
                     <li>Solution</li>
                     <li>Stubs -> Le package sur lequel travailler</li>
