@@ -634,10 +634,10 @@ val neg = LabeledPoint(0.0, Vectors.sparse(3, Array(0, 2), Array(1.0, 3.0)))
     val data = sc.textFile("data/mllib/sample_naive_bayes_data.txt")
 
     val parsedData = data.map { line =>
-    val parts = line.split(',')
-    LabeledPoint(parts(0).toDouble, Vectors.dense(parts(1)
-                                           .split(' ')
-                                           .map(_.toDouble)))
+        val (label, features) = line.split(',')
+        LabeledPoint(label.toDouble, Vectors.dense(features
+                                               .split(' ')
+                                               .map(_.toDouble)))
     }
                 </code></pre>
             </section>
@@ -651,7 +651,9 @@ val neg = LabeledPoint(0.0, Vectors.sparse(3, Array(0, 2), Array(1.0, 3.0)))
 
     // Prediction
     val predictionAndLabel = test.map(p => (model.predict(p.features), p.label))
-    val accuracy = 1.0 * predictionAndLabel.filter(x => x._1 == x._2).count() / test.count()
+    val accuracy = 1.0 * predictionAndLabel
+                        .filter(x => x._1 == x._2)
+                        .count() / test.count()
 
     // Save and load model
     model.save(sc, "myModelPath")

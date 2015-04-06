@@ -1,12 +1,7 @@
 package diy.kmeans
 
-import DataSet
-
 import scala.util.Random
 
-/**
- * Created by mbreton on 06/04/15.
- */
 object Kmeans {
 
   def main(args: Array[String]) {
@@ -80,7 +75,7 @@ object Kmeans {
   }
 
   def findCentroids(numberOfCluster: Int, dataSet: DataSet) = {
-    def points: List[Point] = dataSet.clusters.map(_.points).reduce(_++_)
+    def points: List[Point] = dataSet.clusters.map(_.points).reduce(_ ++ _)
     def updateCentroidWhileHasNotConverged(numOfIteration: Int, previousCentroids: List[Point]): List[Point] = {
       val clusters = partitionUsingTheDistance(previousCentroids, points)
       val centroids = updateCentroids(clusters)
