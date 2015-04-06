@@ -1,4 +1,6 @@
-import DateSetUtils.{fromRawToStructured, toBagOfWord}
+package diy.naivebayes
+
+import diy.naivebayes.DateSetUtils.{fromRawToStructured, toBagOfWord}
 import org.scalatest.{CancelAfterFailure, FunSuite}
 
 import scala.io.Source.fromInputStream

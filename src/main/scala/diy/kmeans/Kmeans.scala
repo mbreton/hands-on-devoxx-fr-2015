@@ -1,5 +1,12 @@
+package diy.kmeans
+
+import DataSet
+
 import scala.util.Random
 
+/**
+ * Created by mbreton on 06/04/15.
+ */
 object Kmeans {
 
   def main(args: Array[String]) {
@@ -98,12 +105,4 @@ object Kmeans {
   def norm(point: Point): Double = {
     distance(point, new Point(0, 0))
   }
-}
-
-case class DataSet(clusters: List[Cluster])
-
-case class Cluster(centroid: Point, points: List[Point])
-
-case class Point(x: Double, y: Double) {
-  def +(p: Point): Point = new Point(x + p.x, y + p.y)
 }

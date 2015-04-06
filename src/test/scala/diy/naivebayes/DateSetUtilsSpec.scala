@@ -1,3 +1,5 @@
+package diy.naivebayes
+
 import org.scalatest.FunSuite
 
 class DateSetUtilsSpec extends FunSuite {

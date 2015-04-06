@@ -1,7 +1,12 @@
+package diy.naivebayes
+
 import com.typesafe.scalalogging.LazyLogging
 
 import scala.util.Try
 
+/**
+ * Created by mbreton on 06/04/15.
+ */
 class SpamClassifier(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) extends LazyLogging{
 
   val totalNumberOfMsg = flaggedBagsOfWord.length
@@ -115,7 +120,7 @@ class SpamClassifier(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) extends
 
   /**
    * This last method should compute is the given msg is a spam or not !
-   * 
+   *
    * Remember : K = (P(M|S=1)*P(S=1))/(P(M|S=0)*P(P(S=0))
    *
    * @param msg The content of the sms
@@ -126,41 +131,5 @@ class SpamClassifier(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) extends
       val p1: Double = time ("p1", {p(msg, true)})
       val p2: Double = time ("p2", {p(msg, false)})
       ((p1 * p(true)) / (p2 * p(false))) > 1})
-  }
-}
-
-/**
- * Represent a parsed message come from dataset
- * @param isSpam Specify if the message is a spam or not
- * @param content Message's content
- */
-case class FlaggedMessage(isSpam: Boolean, content: String)
-
-/**
- * Represent a flagged bag of word
- * @param isSpam Specify if the message is a spam or not
- * @param occurrences Word occurrences by word
- */
-case class FlaggedBagOfWord(isSpam: Boolean, occurrences: Map[String, Int])
-
-object DateSetUtils {
-
-  val wordOfMoreThanTwoLettersRegex = "[\\w\\d]{2,}".r
-  val lineRegex = "(spam|ham)\\s(.*)".r
-  val htmlCodePattern: String = "&.*?;"
-
-  def fromRawToStructured(data: String): List[FlaggedMessage] = {
-    data.split("\n").collect {
-      case lineRegex(flag, content) => FlaggedMessage(isSpam = flag == "spam", content)
-    }.toList
-  }
-
-  def toBagOfWord(text: String): Map[String, Int] = {
-    sanitize(text).groupBy(identity).mapValues(_.length)
-  }
-
-  def sanitize(text: String): List[String] = {
-    val textWithoutHtmlCode: String = text.toLowerCase.replaceAll(htmlCodePattern, " ")
-    (wordOfMoreThanTwoLettersRegex findAllIn textWithoutHtmlCode).toList
   }
 }

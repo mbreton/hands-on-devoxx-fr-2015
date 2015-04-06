@@ -1,3 +1,5 @@
+package diy.kmeans
+
 import org.scalatest._
 
 class KmeansSpec extends FlatSpec with Matchers {
