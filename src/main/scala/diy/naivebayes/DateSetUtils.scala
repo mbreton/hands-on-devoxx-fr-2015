@@ -1,8 +1,5 @@
 package diy.naivebayes
 
-/**
- * Created by mbreton on 06/04/15.
- */
 object DateSetUtils {
 
   val wordOfMoreThanTwoLettersRegex = "[\\w\\d]{2,}".r

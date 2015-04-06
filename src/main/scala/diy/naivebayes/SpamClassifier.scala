@@ -4,9 +4,7 @@ import com.typesafe.scalalogging.LazyLogging
 
 import scala.util.Try
 
-/**
- * Created by mbreton on 06/04/15.
- */
+
 class SpamClassifier(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) extends LazyLogging{
 
   val totalNumberOfMsg = flaggedBagsOfWord.length

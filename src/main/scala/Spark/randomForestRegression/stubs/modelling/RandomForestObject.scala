@@ -1,5 +1,4 @@
 package spark.randomForestRegression.stubs.modelling
-import spark.randomForestRegression.stubs.tools.Utilities._
 
 import org.apache.spark.mllib.regression.LabeledPoint
 import org.apache.spark.mllib.tree.RandomForest

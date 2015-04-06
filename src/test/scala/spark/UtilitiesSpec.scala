@@ -1,7 +1,8 @@
-package spark.randomForestRegression.stubs.tools
+package spark
 
 import org.apache.spark.{SparkContext, SparkConf}
 import org.scalatest.FlatSpec
+import spark.randomForestRegression.stubs.tools.Utilities
 
 
 class UtilitiesSpec extends FlatSpec {
