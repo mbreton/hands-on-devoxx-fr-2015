@@ -8,16 +8,12 @@ import org.apache.spark.{SparkConf, SparkContext}
 import spark.naiveBayesClassification.stubs.features.Engineering.featureEngineering
 import spark.naiveBayesClassification.stubs.tools.Utilities.getMetrics
 
-object NaiveBayesClassification {
-
-  def main(args: Array[String]): Unit = {
-
-    // Setup Spark configurations
-    val conf = new SparkConf().setAppName("SMS_Spam_Classification").setMaster("local[4]").set("spark.executor.memory", "6g")
-    val sc = new SparkContext(conf)
+class NaiveBayesClassification(sc:SparkContext) {
 
     // Loading Data
     // TODO : Read File ./source/sms_train.csv
+    val data = sc.textFile("./source/sms_train.csv")
+
 
     // Feature Engineering
     // TODO : Complete the featureEngineering method in features/Engineering and call it on the loaded data
@@ -34,8 +30,4 @@ object NaiveBayesClassification {
     // TODO : Do the same for the train set for comparison
 
     // TODO : print results
-
-
-  }
-
 }
