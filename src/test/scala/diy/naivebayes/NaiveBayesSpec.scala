@@ -4,7 +4,7 @@ import diy.naivebayes.DateSetUtils.{fromRawToStructured, toBagOfWord}
 import diy.naivebayes.solution.NaiveBayes
 import org.scalatest.{CancelAfterFailure, FunSuite}
 
-import scala.io.Source.fromInputStream
+import scala.io.Source._
 
 class NaiveBayesSpec extends FunSuite with CancelAfterFailure {
 
@@ -98,7 +98,7 @@ class NaiveBayesSpec extends FunSuite with CancelAfterFailure {
 
   val VALIDATION_DATASET_SIZE: Int = 1000
   test("should load text") {
-    val source = fromInputStream(getClass.getResourceAsStream("SMSSpamCollection")).mkString
+    val source = fromFile("source/sms_train.csv").mkString
     val messages: List[FlaggedMessage] = fromRawToStructured(source)
     val (trainingData, validationData) = messages.splitAt(messages.length - VALIDATION_DATASET_SIZE)
     val data = trainingData.map(m => FlaggedBagOfWord(m.isSpam, toBagOfWord(m.content)))

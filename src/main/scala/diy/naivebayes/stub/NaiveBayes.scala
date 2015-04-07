@@ -1,4 +1,4 @@
-package diy.naivebayes.solution
+package diy.naivebayes.stub
 
 import diy.naivebayes.{DateSetUtils, FlaggedBagOfWord}
 
@@ -32,9 +32,7 @@ class NaiveBayes(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) {
    * @return The merged occurrence list
    */
   def mergeTwoOccurrenceList(firstOccurrenceList: Map[String, Int], bagOfWord: FlaggedBagOfWord): Map[String, Int] = {
-    firstOccurrenceList ++ bagOfWord.occurrences.map { case (k, v) =>
-      k -> (v + firstOccurrenceList.getOrElse(k, 0))
-    }
+    ???
   }
 
   /**
@@ -49,8 +47,7 @@ class NaiveBayes(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) {
    * @return Frequency of word by message type
    */
   def bagsOfWordToNumberOfOccurrencesByMsgType(flaggedBagsOfWords: List[FlaggedBagOfWord]): Map[Boolean, Map[String, Int]] = {
-    val booleanToFlaggedBagOfWord = flaggedBagsOfWords.groupBy(_.isSpam)
-    booleanToFlaggedBagOfWord.mapValues(_.foldLeft(Map[String, Int]())(mergeTwoOccurrenceList))
+    ???
   }
 
   /**
@@ -66,7 +63,7 @@ class NaiveBayes(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) {
    * @return The computed probability
    */
   def p(isSpam: Boolean): Double = {
-    count(isSpam).toDouble / totalNumberOfMsg
+    ???
   }
 
   /**
@@ -84,10 +81,7 @@ class NaiveBayes(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) {
    * @return The probability of the given word knowing the type of its message
    */
   def pWord(word: String, isSpam: Boolean): Double = {
-    Try {
-      val flaggedOccurrences = if (isSpam) spamOccurences else hamOccurences
-      flaggedOccurrences(word).toDouble / count(isSpam)
-    }.getOrElse(0.0001)
+    ???
   }
 
   /**
@@ -103,9 +97,7 @@ class NaiveBayes(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) {
    * @return The computed probability
    */
   def p(msg: String, isSpam: Boolean): Double = {
-    DateSetUtils.toBagOfWord(msg).foldLeft(1.0) {
-      case (probability, (word, occ)) => probability * pWord(word, isSpam)
-    }
+    ???
   }
 
   /**
@@ -117,6 +109,6 @@ class NaiveBayes(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) {
    * @return If it's a spam
    */
   def isSpam(msg: String): Boolean = {
-    ((p(msg, true) * p(true)) / (p(msg, false) * p(false))) > 1
+    ???
   }
 }
