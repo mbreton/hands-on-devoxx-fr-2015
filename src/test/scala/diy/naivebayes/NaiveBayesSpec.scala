@@ -1,7 +1,7 @@
 package diy.naivebayes
 
 import diy.naivebayes.DateSetUtils.{fromRawToStructured, toBagOfWord}
-import diy.naivebayes.solution.NaiveBayes
+import diy.naivebayes.stub.NaiveBayes
 import org.scalatest.{CancelAfterFailure, FunSuite}
 
 import scala.io.Source._
