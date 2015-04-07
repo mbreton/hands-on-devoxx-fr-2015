@@ -1,6 +1,6 @@
 package spark.randomForestRegression.solution.modelling
-import spark.randomForestRegression.solution.tools.Utilities._
 
+import spark.randomForestRegression.solution.tools.Utilities._
 import org.apache.spark.mllib.regression.LabeledPoint
 import org.apache.spark.mllib.tree.RandomForest
 import org.apache.spark.mllib.tree.model.RandomForestModel

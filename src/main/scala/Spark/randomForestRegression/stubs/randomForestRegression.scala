@@ -2,6 +2,7 @@ package spark.randomForestRegression.stubs
 
 import spark.randomForestRegression.stubs.features.Engineering.featureEngineering
 import org.apache.spark.{SparkContext, SparkConf}
+import spark.randomForestRegression.stubs.tools.Utilities.{extractHeader, getRMSE}
 import spark.randomForestRegression.stubs.modelling.RandomForestObject.{randomForestTrainRegressor, gridSearchRandomForestRegressor}
 
 object RandomForestRegression {
@@ -31,8 +32,8 @@ object RandomForestRegression {
     // TODO 3 : Modify gridSearchRandomForestRegressor in modelling/RandomForestObject to perform grid search and return the best parameters
 
     // Modelling
-    // TODO 1 : Run randomForestTrainRegressor (method in modelling/RandomForestObject) with the parameters of your choice
-    // TODO 3 : Run randomForestTrainRegressor (method in modelling/RandomForestObject) with the best parameters obtained
+    // TODO 1 : Run randomForestTrainRegressor (method in modelling/RandomForestObject) with the parameters of your choice, on the train set
+    // TODO 3 : Run randomForestTrainRegressor (method in modelling/RandomForestObject) with the best parameters obtained, on the train set
 
     // Evaluation
     // TODO 1 : Implement the calculateRMSE method in tools/Utilities
