@@ -129,7 +129,7 @@
                 </aside>
             </section>
             <section>
-                On utilise leurs résultats sans forécement s'en rendre compte
+                On utilise leurs résultats sans forcément s'en rendre compte
                 <aside class="notes">
                     <!-- Put our comments her -->
                 </aside>
@@ -782,6 +782,31 @@ def getMetrics(model: NaiveBayesModel, data: RDD[LabeledPoint]): MulticlassMetri
             <section>
                 <div class="half">
                     <img src="images/tableau.png">
+                </div>
+                <div class="half">
+                    <img src="images/DecisionTree.png">
+                </div>
+                <div>
+                    <p>
+                        <span class="bold">Règles de Décision :</span>
+                    </p>
+                    <p>
+                        <span class="bold">If</span> Outlook=Sunny <span class="bold">and</span> Humidity=Normal <span class="bold">then</span> Yes
+                    </p>
+                    <p>
+                        <span class="bold">If</span> Outlook=Sunny <span class="bold">and</span> Humidity=High <span class="bold">then</span> No
+                    </p>
+                    <p>
+                        <span class="bold">If</span> Outlook=Rainy <span class="bold">and</span> Windy=True <span class="bold">then</span> No
+                    </p>
+                    <p>
+                        <span class="bold">If</span> Outlook=Rainy <span class="bold">and</span> Windy=False <span class="bold">then</span> Yes
+                    </p>
+                </div>
+            </section>
+            <section>
+                <div class="half">
+                    <img src="images/tableauOutlookHumidity.png">
                 </div>
                 <div class="half">
                     <img src="images/DecisionTree.png">
