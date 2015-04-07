@@ -1,16 +1,16 @@
 package diy.naivebayes
 
 import diy.naivebayes.DateSetUtils.{fromRawToStructured, toBagOfWord}
-import diy.naivebayes.stub.NaiveBayes
+import diy.naivebayes.solution.NaiveBayes
 import org.scalatest.{CancelAfterFailure, FunSuite}
 
 import scala.io.Source._
 
 class NaiveBayesSpec extends FunSuite with CancelAfterFailure {
 
-  test("merge two occurrence lists") {
+  test("merge two occurrences lists") {
     val classifier = new NaiveBayes()
-    val merged = classifier.mergeTwoOccurrenceList(
+    val merged = classifier.mergeTwoOccurrencesList(
       Map("foo" -> 2, "bar" -> 1, "da" -> 3),
       FlaggedBagOfWord(true, Map("foo" -> 1, "bar" -> 1, "qix" -> 1))
     )
@@ -42,7 +42,7 @@ class NaiveBayesSpec extends FunSuite with CancelAfterFailure {
     assert(occurrences(false)("va") == 1)
   }
 
-  test("should compute the probability of message's type") {
+  test("should compute the probability of message type") {
     val bagsOfWord: List[FlaggedBagOfWord] = List(
       FlaggedBagOfWord(true, Map()),
       FlaggedBagOfWord(true, Map()),
@@ -55,7 +55,7 @@ class NaiveBayesSpec extends FunSuite with CancelAfterFailure {
     assert(classifier.p(false) == 2.0 / 5.0)
   }
 
-  test("should compute the probability of 0.0001 when the word is unknown") {
+  test("should compute a probability of 0.0001 when the word is unknown") {
     val bagsOfWord: List[FlaggedBagOfWord] = List(
       FlaggedBagOfWord(true, Map()), FlaggedBagOfWord(false, Map())
     )
@@ -63,7 +63,7 @@ class NaiveBayesSpec extends FunSuite with CancelAfterFailure {
     assert(classifier.pWord("unknownWord", true) == 0.0001)
   }
 
-  test("should compute the probability of a word knowing the type's message") {
+  test("should compute the probability of a word knowing the message type") {
     val bagsOfWord: List[FlaggedBagOfWord] = List(
       FlaggedBagOfWord(true, Map("mandatcash" -> 1)),
       FlaggedBagOfWord(true, Map("foo" -> 1)),
@@ -97,19 +97,21 @@ class NaiveBayesSpec extends FunSuite with CancelAfterFailure {
   }
 
   val VALIDATION_DATASET_SIZE: Int = 1000
-  test("should load text") {
+  test("should load dataset and be efficient until 98% !") {
+    // loading dataset
     val source = fromFile("source/sms_train.csv").mkString
     val messages: List[FlaggedMessage] = fromRawToStructured(source)
+
+    // split dataset, one for training and an other for validation
     val (trainingData, validationData) = messages.splitAt(messages.length - VALIDATION_DATASET_SIZE)
     val data = trainingData.map(m => FlaggedBagOfWord(m.isSpam, toBagOfWord(m.content)))
 
+    // train naive bayes with training dataset
     val classifier = new NaiveBayes(data)
-    val countSpamsInValidation = validationData.count(_.isSpam)
-    val countAccuratePrediction:Double = validationData.count{ message =>
-      classifier.isSpam(message.content) == message.isSpam
-    }
-    val correctlyClassifiedPercentage = countAccuratePrediction / VALIDATION_DATASET_SIZE * 100
 
+    // test and measure efficiency
+    val countAccuratePrediction:Double = validationData.count(message =>classifier.isSpam(message.content) == message.isSpam)
+    val correctlyClassifiedPercentage = countAccuratePrediction / VALIDATION_DATASET_SIZE * 100
     assert(correctlyClassifiedPercentage == 98)
   }
 }

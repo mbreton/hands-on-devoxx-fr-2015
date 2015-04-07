@@ -17,12 +17,12 @@ class NaiveBayes(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) {
     else
       Map[Boolean, Map[String, Int]](true -> Map(), false -> Map())
 
-  val spamOccurences = occurrences(true)
-  val hamOccurences = occurrences(false)
+  val spamOccurrences = occurrences(true)
+  val hamOccurrences = occurrences(false)
 
 
   /**
-   * This utility method will be used to merge occurrence lists's bag of words.
+   * This utility method will be used to merge occurrence lists of bag of words.
    * The expected result should contain the sum of values mapped by keys.
    *
    * See test in {@link diy.naivebayes.NaiveBayesSpec} for a real case.
@@ -31,17 +31,16 @@ class NaiveBayes(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) {
    * @param bagOfWord
    * @return The merged occurrence list
    */
-  def mergeTwoOccurrenceList(firstOccurrenceList: Map[String, Int], bagOfWord: FlaggedBagOfWord): Map[String, Int] = {
+  def mergeTwoOccurrencesList(firstOccurrenceList: Map[String, Int], bagOfWord: FlaggedBagOfWord): Map[String, Int] = {
     firstOccurrenceList ++ bagOfWord.occurrences.map { case (k, v) =>
       k -> (v + firstOccurrenceList.getOrElse(k, 0))
     }
   }
 
   /**
-   * This method have to transform a bag of word list into number
-   * of word occurrences by message type...
-   * To do this, we advise in a first time to group by message type the bags of words
-   * and then to merge all the occurrence list thanks to {@link mergeTwoOccurrenceList}
+   * This method have to transform a bag of word list into number of word occurrences by message type...
+   * To do this, we advise in a first time to group messages by type
+   * and then to merge all the occurrences list thanks to {@link mergeTwoOccurrenceList}
    *
    * See test in {@link diy.naivebayes.NaiveBayesSpec} for a real case.
    *
@@ -50,11 +49,11 @@ class NaiveBayes(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) {
    */
   def bagsOfWordToNumberOfOccurrencesByMsgType(flaggedBagsOfWords: List[FlaggedBagOfWord]): Map[Boolean, Map[String, Int]] = {
     val booleanToFlaggedBagOfWord = flaggedBagsOfWords.groupBy(_.isSpam)
-    booleanToFlaggedBagOfWord.mapValues(_.foldLeft(Map[String, Int]())(mergeTwoOccurrenceList))
+    booleanToFlaggedBagOfWord.mapValues(_.foldLeft(Map[String, Int]())(mergeTwoOccurrencesList))
   }
 
   /**
-   * The p function compute the probability of a message's type.
+   * The p function computes the probability of a message's type.
    * To implement it, you can use the {@link count} and
    * the {@link totalNumberOfMsg} fields.
    *
@@ -70,10 +69,10 @@ class NaiveBayes(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) {
   }
 
   /**
-   * The pWord function compute the probability of a word knowing the type of
+   * The pWord function computes the probability of a word knowing the type of
    * its message.
    * To implement it, you can use the {@link count},
-   * the {@link spamOccurences}, and the {@link hamOccurences} fields.
+   * the {@link spamOccurrences}, and the {@link hamOccurrences} fields.
    *
    * Take care to return a Double and not an Int !
    *
@@ -85,13 +84,13 @@ class NaiveBayes(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) {
    */
   def pWord(word: String, isSpam: Boolean): Double = {
     Try {
-      val flaggedOccurrences = if (isSpam) spamOccurences else hamOccurences
+      val flaggedOccurrences = if (isSpam) spamOccurrences else hamOccurrences
       flaggedOccurrences(word).toDouble / count(isSpam)
     }.getOrElse(0.0001)
   }
 
   /**
-   * The second p function compute the probability of a message knowing its type
+   * The second p function computes the probability of a message knowing its type
    * To implement it, you can use the {@link diy.naivebayes.DateSetUtils#toBagOfWord} method and then
    * compute the product of the probabilities of each word
    *
