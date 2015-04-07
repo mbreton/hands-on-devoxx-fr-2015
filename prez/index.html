@@ -817,6 +817,20 @@ def getMetrics(model: NaiveBayesModel, data: RDD[LabeledPoint]): MulticlassMetri
                     </div>
                 </div>
             </section>
+            <section>
+                <h4>Paramètres à prendre en compte en Spark</h4>
+                <p>
+                    <li>categoricalFeaturesInfo : Mapping donnant la position et le nombre de classes des variables catégorielles</li>
+                    <li>numTrees : Nombre d'arbres à construire</li>
+                    <li>maxDepth : Profondeur maximale de chaque arbre</li>
+                    <li>maxBins : Nombre maxomal de feuilles dans chaque arbre</li> 
+                </p>
+                <p>
+                    Autres variables disponibles : 
+                    <li>featuresSubsetStrategy : Nombre de caractéristiques à prendre en compte à chaque split ("auto")</li>
+                    <li>impurity : Critère de sélection de la meilleure caractéristique ("variance")</li>
+                </p>
+            </section>
         </section>
         <section>
             <h3>Mise en pratique</h3>
@@ -1131,9 +1145,9 @@ println(s"Test Error: $rmseTest")
     people.registerTempTable("people")
 
     // Examples
-    df.select("name").show()
-    df.filter(df("name") > 21).show()
-    df.groupBy("age").count().show()
+    people.select("name").show()
+    people.filter(people("name") > 21).show()
+    people.groupBy("age").count().show()
                 </code></pre>
             </section>
             <section id="data_frame_exploration">
