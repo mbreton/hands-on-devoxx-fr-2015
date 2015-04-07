@@ -570,10 +570,6 @@ object wordCount {
 
             </code></pre>
         </section>
-        <section>
-            <h3>Mise en pratique</h3>
-            // TODO
-        </section>
         <section data-background-image="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1165437/machine-learning.jpg">
             <h2 style="text-align: right">MLlib</h2>
         </section>
@@ -608,7 +604,7 @@ val sv2 = Vectors.sparse(3, Seq((0, 1.0), (2, 3.0)))
 
         </section>
         <section>
-            <h3>Les Labeled diy.Point</h3>
+            <h3>Les Labeled Point</h3>
             <pre class="scala"><code class="hljs">
 import org.apache.spark.mllib.linalg.Vectors
 import org.apache.spark.mllib.regression.LabeledPoint
@@ -774,112 +770,32 @@ def getMetrics(model: NaiveBayesModel, data: RDD[LabeledPoint]): MulticlassMetri
                 </code></pre>
             </section>
         </section>
-        <section>
+        <section data-background-image="images/forest5.png">
             <h2 style="text-align: right">Random Forest en Spark</h2>
         </section>
         <section>
             <h3>Arbres de décision</h3>
             <section>
-                <div class="half">
-                    <img src="images/tableau.png">
-                </div>
-                <div class="half">
-                    <img src="images/DecisionTree.png">
+                <h4>Principe</h4>
+                <div>
+                    <li>Algorithme récursif de partitionnement des données pour former des subsets homogènes</li>
+                    <li>Homogénéité calculée avec la Sum of Squared Error (SSE): $$SSE = \sum_{S_1} {(y_i-\overline{y_1})^2} + \sum_{S_2} {(y_i-\overline{y_2})^2}$$</li>
+                    <li>Plus l'arbre est profond, moins il y a de données dans le subset, plus le SSE est faible</li>
+                    <li>A chaque split, sélection de la caractéristique que  aura le plus faible SSE</li>
                 </div>
                 <div>
-                    <p>
-                        <span class="bold">Règles de Décision :</span>
-                    </p>
-                    <p>
-                        <span class="bold">If</span> Outlook=Sunny <span class="bold">and</span> Humidity=Normal <span class="bold">then</span> Yes
-                    </p>
-                    <p>
-                        <span class="bold">If</span> Outlook=Sunny <span class="bold">and</span> Humidity=High <span class="bold">then</span> No
-                    </p>
-                    <p>
-                        <span class="bold">If</span> Outlook=Rainy <span class="bold">and</span> Windy=True <span class="bold">then</span> No
-                    </p>
-                    <p>
-                        <span class="bold">If</span> Outlook=Rainy <span class="bold">and</span> Windy=False <span class="bold">then</span> Yes
-                    </p>
+                    <img src="images/regressionTreeExample.png" height="270px">
                 </div>
             </section>
             <section>
-                <div class="half">
-                    <img src="images/tableauOutlookHumidity.png">
-                </div>
-                <div class="half">
-                    <img src="images/DecisionTree.png">
-                </div>
-                <div>
-                    <p>
-                        <span class="bold">Règles de Décision :</span>
-                    </p>
-                    <p>
-                        <span class="bold">If</span> Outlook=Sunny <span class="bold">and</span> Humidity=Normal <span class="bold">then</span> Yes
-                    </p>
-                    <p>
-                        <span class="bold">If</span> Outlook=Sunny <span class="bold">and</span> Humidity=High <span class="bold">then</span> No
-                    </p>
-                    <p>
-                        <span class="bold">If</span> Outlook=Rainy <span class="bold">and</span> Windy=True <span class="bold">then</span> No
-                    </p>
-                    <p>
-                        <span class="bold">If</span> Outlook=Rainy <span class="bold">and</span> Windy=False <span class="bold">then</span> Yes
-                    </p>
-                </div>
-            </section>
-            <section>
-                <h4>Mesure de l'incertitude: Entropie</h4>
-                <p><span class="bold">Entropie :</span> Permet de quantifier le degré d'incertitude sur une variable. Mesurée en bits.</p>
-                $$H(X) = - \sum_{k=1}^{K}{P(x_k) log(P(x_k))}$$
-                <p><span class="bold">Exemple :</span> X = Résultat d'un lancer de pièce.</p>
-                $$H(X) = - [P(X=Pile) log(P(X=Pile)) + P(X=Face) log(P(X=Face))]$$
-                <br/>
-                <div style="font-size: 0.65em;text-align: left">
-                    <div class="half">
-                        <p>Si pièce non truquée:</p>
-                        $$P(x=Pile) = P(X=Face) = 0.5$$
-                        $$H(X) = -(0.5*log(0.5) + 0.5*log(0.5)) = 1 bit$$
-                    </div>
-                    <div class="half" >
-                        <p>Si pièce truquée:</p>
-                        $$P(x=Pile) = 0.8; P(X=Face) = 0.2$$
-                        $$H(X) = -(0.8*log(0.8) + 0.2*log(0.2)) = 0.722 bit$$
-                    </div>
-                </div>
-            </section>
-            <section>
-                <h4>Gain en information</h4>
-                <div class="center"><img src="images/arbre.png" height="200px"></div>
-                <p>Comment mesurer la réduction d'incertitude ?</p>
-                <p><span class="bold">Information Gain</span> $$IG = H_0 - (\frac{|T_{1,1}|}{|T_0|}H_{1,1} + \frac{|T_{1,2}|}{|T_0|}H_{1,2})$$</p>
-                <p class="center"><span class="bold">A chaque split, on teste toutes les features encore à disposition, et on sélectionne la feature permettant le gain en information le plus important</span></p>
-            </section>
-            <section>
-                <h4>Exemple</h4>
-                <div>
-                    <div class="half">
-                        <img src="images/outlook.png">
-                    </div>
-                    <div class="half">
-                        <p>
-                            $$H_{0} = - \frac{5}{10}log(\frac{5}{10}) - \frac{5}{10}log(\frac{5}{10}) = 1$$
-                        </p>
-                        <p>
-                            $$H_{1,1} = - \frac{2}{5}log(\frac{2}{5}) - \frac{3}{5}log(\frac{3}{5}) = 0.97$$
-                        </p>
-                        <p>
-                            $$H_{1,2} = - \frac{2}{5}log(\frac{2}{5}) - \frac{3}{5}log(\frac{3}{5}) = 0.97$$
-                        </p>
-                        <p>
-                            $$IG_{Outlook} = H_{0} -  (\frac{5}{10} * H_{1,1} + \frac{5}{10} * H_{1,2}) = 0.03$$
-                        </p>
-                    </div>
-                </div>
-                <div class="center">
-                    <img src="images/tableau4.png" style="width: 40%; height: 40%" class="fragment">
-                </div>
+                <h4>Exemple : Prédiction de la demande de vélos</h4>
+                <img src="images/bike_count.png" height="230px">
+                <img src="images/bike_count_treeDepth1.png" height="230px" class="fragment">
+                <img src="images/bike_count_treeDepth2.png" height="230px" class="fragment">
+                <img src="images/bike_count_treeDepth5.png" height="230px" class="fragment">
+                <img src="images/bike_count_treeDepth10.png" height="230px" class="fragment">
+                <img src="images/bike_count_treeDepth30.png" height="230px" class="fragment">
+                <div class="fragment">Attention à la profondeur de l'arbre !</div>
             </section>
         </section>
         <section>
@@ -938,47 +854,7 @@ def getMetrics(model: NaiveBayesModel, data: RDD[LabeledPoint]): MulticlassMetri
                     $$RMSE = \sqrt{\frac{1}{N} \sum_{i=1}^{N} (\hat{y}_i - y_i)^2}$$
                 </p>
             </section>
-            <section>
-                <h4>Les Data Frames</h4>
-                <pre class="scala"><code class="hljs">
-    // sc is an existing SparkContext.
-    val sqlContext = new org.apache.spark.sql.SQLContext(sc)
-    // this is used to implicitly convert an RDD to a DataFrame.
-    import sqlContext.implicits._
-
-    // Define the schema using a case class.
-    case class Person(name: String, age: Int)
-
-    // Create an RDD of Person objects and register it as a table.
-    val people = sc.textFile("examples/src/main/resources/people.txt")
-                    .map(_.split(","))
-                    .map(p => Person(p(0), p(1).trim.toInt))
-                    .toDF()
-    people.registerTempTable("people")
-
-    // Examples
-    df.select("name").show()
-    df.filter(df("name") > 21).show()
-    df.groupBy("age").count().show()
-                </code></pre>
-            </section>
-            <section id="data_frame_exploration">
-                <h4>Exploration des données</h4>
-                <p class="offset-left">
-                    <li>
-                        Dans le shell, chargez le dataset dans un RDD, puis transformez-le en DataFrame
-                    </li>
-                    <li>
-                        Observez quelques valeurs de chaque feature
-                    </li>
-                    <li>
-                        Calculez quelques statistiques que chaque feature pour voir s'il n'y a pas de données manquantes ou d'outliers
-                    </li>
-                    <li>
-                        Modifiez les données si besoin
-                    </li>
-                </p>
-            </section>
+            
             <section>
                 <h2>Implémentation</h2>
             </section>
@@ -1236,88 +1112,53 @@ println(s"Train Error: $rmseTrain")
 println(s"Test Error: $rmseTest")
                 </code></pre>
             </section>
+            <section>
+                <h4>Exploration des données : Les Data Frames</h4>
+                <pre class="scala"><code class="hljs">
+    // sc is an existing SparkContext.
+    val sqlContext = new org.apache.spark.sql.SQLContext(sc)
+    // this is used to implicitly convert an RDD to a DataFrame.
+    import sqlContext.implicits._
+
+    // Define the schema using a case class.
+    case class Person(name: String, age: Int)
+
+    // Create an RDD of Person objects and register it as a table.
+    val people = sc.textFile("examples/src/main/resources/people.txt")
+                    .map(_.split(","))
+                    .map(p => Person(p(0), p(1).trim.toInt))
+                    .toDF()
+    people.registerTempTable("people")
+
+    // Examples
+    df.select("name").show()
+    df.filter(df("name") > 21).show()
+    df.groupBy("age").count().show()
+                </code></pre>
+            </section>
+            <section id="data_frame_exploration">
+                <h4>Exploration des données</h4>
+                <p class="offset-left">
+                    <li>
+                        Dans le shell, chargez le dataset dans un RDD, puis transformez-le en DataFrame
+                    </li>
+                    <li>
+                        Observez quelques valeurs de chaque feature
+                    </li>
+                    <li>
+                        Calculez quelques statistiques que chaque feature pour voir s'il n'y a pas de données manquantes ou d'outliers
+                    </li>
+                    <li>
+                        Modifiez les données si besoin
+                    </li>
+                </p>
+            </section>
         </section>
         <section class="back-page" data-background-image="images/bg.png">
             <h1>Merci</h1>
             <aside class="notes">
                 <!-- Put our comments her -->
             </aside>
-        </section>
-        <section>
-            <h3>Mise en pratique</h3>
-            <section id="bike-demand-prediction">
-                <h4>Prédiction de la demande de vélos</h4>
-                Features présentes dans le dataset bike_train.csv
-                <p class="offset-left">
-                    <p>
-                        <span class="bold">date</span> : La date au format "YYYY-MM-DD HH:MM:SS"
-                    </p>
-                    <p>
-                        <span class="bold">season_{1,2,3,4}</span> : Saison (binaire)
-                    </p>
-                    <p>
-                        <span class="bold">holiday</span> : Vacances (binaire)
-                    </p>
-                    <p>
-                        <span class="bold">weather_{1,2,3,4}</span> : Catégorie de temps (binaire)
-                    </p>
-                    <p>
-                        <span class="bold">temperature</span> : Température moyenne (entre 0 et 1)
-                    </p>
-                    <p>
-                        <span class="bold">humidity</span> : Humidité moyenne (entre 0 et 1)
-                    </p>
-                    <p>
-                        <span class="bold">windspeed</span> : Vitesse moyenne du vent
-                    </p>
-                    <p>
-                        <span class="bold">count</span> : La variable cible - Nombre de vélos loués pendant la journée
-                    </p>
-                </p>
-            </section>
-            <section id="data_science_pipeline">
-                <h4>Démarche globale en Data Science</h4>
-                <p class="offset-left">
-                    <p>
-                        Step 1 : Chargement des données
-                    </p>
-                    <p>
-                        Step 2 : Feature Engineeging (Nettoyage, création et préparation des features)
-                    </p>
-                    <p>
-                        Step 3 : Splitting (train, validation et test sets)
-                    </p>
-                    <p>
-                        Step 4 : Tuning des paramètres (à la main ou grid search)
-                    </p>
-                    <p>
-                        Step 5 : Modelling sur train+validation set
-                    </p>
-                    <p>
-                        Step 6 : Prediction sur le test set
-                    </p>
-                </p>
-            </section>
-            <section id="grid_search">
-                <h4>Le Grid Search</h4>
-                <p class="offset-left">
-                    <p>
-                        <span class="bold">Objectif</span> : Tester, pour chaque paramètre, plusieurs possibilités
-                    </p>
-                    <p>
-                        <span class="bold">Réalisation</span>
-                        <p>
-                            Pour chaque combinaison de paramètres, construire un modèle basé sur le train set
-                        </p>
-                        <p>
-                            Calculer le score de prédiction de chaque modèle sur le validation set
-                        </p>
-                        <p>
-                            Sélectionner le jeu de paramètres ayant donné le meilleur score
-                        </p>
-                    </p>
-                </p>
-            </section>
         </section>
     </div>
     <div class="footer">
