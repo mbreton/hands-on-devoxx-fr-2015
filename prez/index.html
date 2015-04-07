@@ -326,19 +326,12 @@
             </section>
             <section>
                 <h3>Tp : Naive Bayes</h3>
-                <p>Ouvrir le fichier src/test/scala/diy.naivebayes.NaiveBayesSpec.scala</p>
-                <p>Ouvrir le fichier src/main/scala/NaiveBayes.scala</p>
-                <p>Lancer 'sbt test' à la racine du projet</p>
-            </section>
-            <section>
-                <h3>Un peu de recul sur l'algo</h3>
-                Est-ce un bon score ? (> 0.5 et |spam|/|total| ?)<br/>
-                Est-ce que mes données d'entraînement sont suffisament représentatives ?<br/>
-                Est-ce que mes résultats se généralisent ?<br/>
-                L'approche naïve est elle pertinente ?
-                <aside class="notes">
-                    données représentatives: est-ce que le ratio nb spam/nb ham est représentatif de ce que l’on retrouve dans la nature ? (vu le point de ce rapport)
-                </aside>
+                <ul>
+                    <li>Ouvrir le fichier <span class="bold">src/test/scala/diy/naivebayes/NaiveBayesSpec.scala</span></li>
+                    <li>Ouvrir le fichier <span class="bold">src/main/scala/stub/NaiveBayes.scala</span></li>
+                    <li>Lancer '<span class="bold">sbt</span>' à la racine du projet</li>
+                    <li>Puis '<span class="bold">testOnly ~testOnly diy.naivebayes.NaiveBayesSpec</span>' à la racine du projet</li>
+                </ul>
             </section>
         </section>
         <section>
@@ -381,7 +374,7 @@
             <div class="center">
                 <img src="https://s3.amazonaws.com/media-p.slid.es/uploads/albanphelip/images/1165414/MRSandwich.png">
             </div>
-            <aside class="notesn">
+            <aside class="notes">
                 Slide mapreduce : Appuyé sur le fait qu’on peut paralléliser le processus de découpe et d’assemblage indépendamment.
             </aside>
         </section>
@@ -823,10 +816,10 @@ def getMetrics(model: NaiveBayesModel, data: RDD[LabeledPoint]): MulticlassMetri
                     <li>categoricalFeaturesInfo : Mapping donnant la position et le nombre de classes des variables catégorielles</li>
                     <li>numTrees : Nombre d'arbres à construire</li>
                     <li>maxDepth : Profondeur maximale de chaque arbre</li>
-                    <li>maxBins : Nombre maxomal de feuilles dans chaque arbre</li> 
+                    <li>maxBins : Nombre maxomal de feuilles dans chaque arbre</li>
                 </p>
                 <p>
-                    Autres variables disponibles : 
+                    Autres variables disponibles :
                     <li>featuresSubsetStrategy : Nombre de caractéristiques à prendre en compte à chaque split ("auto")</li>
                     <li>impurity : Critère de sélection de la meilleure caractéristique ("variance")</li>
                 </p>
@@ -868,7 +861,7 @@ def getMetrics(model: NaiveBayesModel, data: RDD[LabeledPoint]): MulticlassMetri
                     $$RMSE = \sqrt{\frac{1}{N} \sum_{i=1}^{N} (\hat{y}_i - y_i)^2}$$
                 </p>
             </section>
-            
+
             <section>
                 <h2>Implémentation</h2>
             </section>
