@@ -9,7 +9,6 @@ class KmeansSpec extends FlatSpec with Matchers {
     (Math.floor(distance * 100) / 100) should be(4.24)
   }
 
-
   it should "find the closest centroid" in {
     val point: Point = Point(0, 0)
     val centroids = List(Point(2, 2), Point(2, 3), Point(1, 1))

@@ -1,6 +1,7 @@
 package diy.naivebayes
 
 import diy.naivebayes.DateSetUtils.{fromRawToStructured, toBagOfWord}
+import diy.naivebayes.solution.NaiveBayes
 import org.scalatest.{CancelAfterFailure, FunSuite}
 
 import scala.io.Source.fromInputStream
@@ -8,7 +9,7 @@ import scala.io.Source.fromInputStream
 class NaiveBayesSpec extends FunSuite with CancelAfterFailure {
 
   test("merge two occurrence lists") {
-    val classifier = new SpamClassifier()
+    val classifier = new NaiveBayes()
     val merged = classifier.mergeTwoOccurrenceList(
       Map("foo" -> 2, "bar" -> 1, "da" -> 3),
       FlaggedBagOfWord(true, Map("foo" -> 1, "bar" -> 1, "qix" -> 1))
@@ -26,7 +27,7 @@ class NaiveBayesSpec extends FunSuite with CancelAfterFailure {
       FlaggedBagOfWord(true, Map("credit" -> 1, "je" -> 1, "mandatcash" -> 1)),
       FlaggedBagOfWord(false, Map("coucou" -> 1, "ça" -> 1, "va" -> 1))
     )
-    val classifier = new SpamClassifier(bagsOfWord)
+    val classifier = new NaiveBayes(bagsOfWord)
     val occurrences = classifier.bagsOfWordToNumberOfOccurrencesByMsgType(bagsOfWord)
     assert(occurrences(true).size == 5)
     assert(occurrences(true)("vends") == 1)
@@ -49,7 +50,7 @@ class NaiveBayesSpec extends FunSuite with CancelAfterFailure {
       FlaggedBagOfWord(false, Map()),
       FlaggedBagOfWord(false, Map())
     )
-    val classifier = new SpamClassifier(bagsOfWord)
+    val classifier = new NaiveBayes(bagsOfWord)
     assert(classifier.p(true) == 3.0 / 5.0)
     assert(classifier.p(false) == 2.0 / 5.0)
   }
@@ -58,7 +59,7 @@ class NaiveBayesSpec extends FunSuite with CancelAfterFailure {
     val bagsOfWord: List[FlaggedBagOfWord] = List(
       FlaggedBagOfWord(true, Map()), FlaggedBagOfWord(false, Map())
     )
-    val classifier = new SpamClassifier(bagsOfWord)
+    val classifier = new NaiveBayes(bagsOfWord)
     assert(classifier.pWord("unknownWord", true) == 0.0001)
   }
 
@@ -68,7 +69,7 @@ class NaiveBayesSpec extends FunSuite with CancelAfterFailure {
       FlaggedBagOfWord(true, Map("foo" -> 1)),
       FlaggedBagOfWord(false, Map("coucou" -> 1, "ça" -> 1, "va" -> 1))
     )
-    val classifier = new SpamClassifier(bagsOfWord)
+    val classifier = new NaiveBayes(bagsOfWord)
     assert(classifier.pWord("mandatcash", true) == 1.0 / 2.0)
   }
 
@@ -78,7 +79,7 @@ class NaiveBayesSpec extends FunSuite with CancelAfterFailure {
       FlaggedBagOfWord(true, Map("fucking" -> 1)),
       FlaggedBagOfWord(false, Map("coucou" -> 1, "ça" -> 1, "va" -> 1))
     )
-    val classifier = new SpamClassifier(bagsOfWord)
+    val classifier = new NaiveBayes(bagsOfWord)
     assert(classifier.p("Fucking mandatcash !!!", true) == 0.25)
   }
 
@@ -90,7 +91,7 @@ class NaiveBayesSpec extends FunSuite with CancelAfterFailure {
       FlaggedBagOfWord(true, Map("can" -> 1, "you" -> 1, "send" -> 1, "mandatcash" -> 1)),
       FlaggedBagOfWord(true, Map("big" -> 1, "promotion" -> 1, "pills" -> 1))
     )
-    val classifier = new SpamClassifier(bagsOfWord)
+    val classifier = new NaiveBayes(bagsOfWord)
     assert(classifier.isSpam("Can you send money !?"))
     assert(!classifier.isSpam("How are you ? Have you take your pills ?"))
   }
@@ -102,7 +103,7 @@ class NaiveBayesSpec extends FunSuite with CancelAfterFailure {
     val (trainingData, validationData) = messages.splitAt(messages.length - VALIDATION_DATASET_SIZE)
     val data = trainingData.map(m => FlaggedBagOfWord(m.isSpam, toBagOfWord(m.content)))
 
-    val classifier = new SpamClassifier(data)
+    val classifier = new NaiveBayes(data)
     val countSpamsInValidation = validationData.count(_.isSpam)
     val countAccuratePrediction:Double = validationData.count{ message =>
       classifier.isSpam(message.content) == message.isSpam

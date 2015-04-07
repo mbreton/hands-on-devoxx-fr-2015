@@ -1,11 +1,11 @@
-package diy.naivebayes
+package diy.naivebayes.solution
 
-import com.typesafe.scalalogging.LazyLogging
+import diy.naivebayes.{DateSetUtils, FlaggedBagOfWord}
 
 import scala.util.Try
 
 
-class SpamClassifier(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) extends LazyLogging {
+class NaiveBayes(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) {
 
   val totalNumberOfMsg = flaggedBagsOfWord.length
   val numberOfSpam = flaggedBagsOfWord.count(_.isSpam)
@@ -25,14 +25,14 @@ class SpamClassifier(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) extends
    * This utility method will be used to merge occurrence lists's bag of words.
    * The expected result should contain the sum of values mapped by keys.
    *
-   * See the first test of {@link SpamClassifierTest} for a real case.
+   * See test in {@link diy.naivebayes.NaiveBayesSpec} for a real case.
    *
    * @param firstOccurrenceList
-   * @param secondOccurrenceList
+   * @param bagOfWord
    * @return The merged occurrence list
    */
-  def mergeTwoOccurrenceList(firstOccurrenceList: Map[String, Int], secondOccurrenceList: FlaggedBagOfWord): Map[String, Int] = {
-    firstOccurrenceList ++ secondOccurrenceList.occurrences.map { case (k, v) =>
+  def mergeTwoOccurrenceList(firstOccurrenceList: Map[String, Int], bagOfWord: FlaggedBagOfWord): Map[String, Int] = {
+    firstOccurrenceList ++ bagOfWord.occurrences.map { case (k, v) =>
       k -> (v + firstOccurrenceList.getOrElse(k, 0))
     }
   }
@@ -43,7 +43,7 @@ class SpamClassifier(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) extends
    * To do this, we advise in a first time to group by message type the bags of words
    * and then to merge all the occurrence list thanks to {@link mergeTwoOccurrenceList}
    *
-   * See the second test of {@link SpamClassifierTest} for a real case.
+   * See test in {@link diy.naivebayes.NaiveBayesSpec} for a real case.
    *
    * @param flaggedBagsOfWords Bag of word list
    * @return Frequency of word by message type
@@ -60,7 +60,7 @@ class SpamClassifier(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) extends
    *
    * Take care to return a Double and not an Int !
    *
-   * See the third test of {@link SpamClassifierTest} for a real case.
+   * See test in {@link diy.naivebayes.NaiveBayesSpec} for a real case.
    *
    * @param isSpam Define the message's type
    * @return The computed probability
@@ -72,35 +72,22 @@ class SpamClassifier(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) extends
   /**
    * The pWord function compute the probability of a word knowing that the type of
    * its message.
-   * To implement it, you can use the {@link count} and
-   * the {@link occurrences} fields.
+   * To implement it, you can use the {@link count},
+   * the {@link spamOccurences}, and the {@link hamOccurences} fields.
    *
    * Take care to return a Double and not an Int !
    *
-   * See the fourth and fifth test of {@link SpamClassifierTest} for a real case.
+   * See test in {@link diy.naivebayes.NaiveBayesSpec} for a real case.
    *
    * @param word The given word
    * @param isSpam The type of the message containing this word
    * @return The probability of the given word knowing the type of its message
    */
   def pWord(word: String, isSpam: Boolean): Double = {
-//    val _flaggedOccurrences: Map[String, Int] = time("by map", {
-//      occurrences(isSpam)
-//    })
-    val flaggedOccurrences: Map[String, Int] = time("by if", {
-      if (isSpam) spamOccurences else hamOccurences
-    })
-    Try(
+    Try {
+      val flaggedOccurrences = if (isSpam) spamOccurences else hamOccurences
       flaggedOccurrences(word).toDouble / count(isSpam)
-    ).getOrElse(0.0001)
-  }
-
-  def time[R](subject: String, block: => R): R = {
-    val t0 = System.nanoTime()
-    val result = block // call-by-name
-    val t1 = System.nanoTime()
-    //logger.debug(s"$subject : ${(t1 - t0) / Math.pow(10, 6)}ms")
-    result
+    }.getOrElse(0.0001)
   }
 
   /**
@@ -110,7 +97,7 @@ class SpamClassifier(flaggedBagsOfWord: List[FlaggedBagOfWord] = List()) extends
    *
    * Take care to return a Double and not an Int !
    *
-   * See the third test of {@link SpamClassifierTest} for a real case.
+   * See test in {@link diy.naivebayes.NaiveBayesSpec} for a real case.
    *
    * @param isSpam Define the message's type
    * @return The computed probability
